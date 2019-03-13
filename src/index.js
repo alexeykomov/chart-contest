@@ -7,7 +7,7 @@
  * @author alexeykcontact@gmail.com (Alex K)
  */
 
-import { data } from './data';
+import {data} from './data';
 
 const app = new App();
 window.addEventListener('DOMContentLoaded', () => app.onLoad(), false);
@@ -16,10 +16,12 @@ window.addEventListener('unload', () => app.onUnLoad(), false);
 class Chart {
   constructor() {
 
+    /** @type {State} */
     this.state = {
-      line: [];
+      lines: [],
       min: 0,
       max: 0,
+      colors: [],
     };
 
     /** @type {HTMLCanvasElement} */
@@ -43,15 +45,23 @@ class Chart {
   }
 
   /**
-   * @param {{columns: Array.<Array.<string|number>>}} entry
-   * @
+   * @param {{
+    columns: Array.<Array.<string|number>>,
+    colors: Array.<string>
+   }} entry
+   * @return {State}
    */
   formatDataEntry(entry) {
-    const res = [];
+    const lines = [];
     entry.columns.forEach(col => {
-      res.push(col.slice(1));
+      lines.push(col.slice(1));
     });
-    return res;
+    const colors = Object.keys(entry.colors)
+        .map(key => entry.colors[key]);
+    return {
+      lines,
+      colors,
+    };
   };
 
   /**
@@ -94,17 +104,17 @@ class Chart {
 
   render() {
     requestAnimationFrame(() => {
-      this.context.clearRect(0,0,this.canvasWidth, this.canvasHeight);
-      const linesNumber = this.state.line[0].length - 1;
-      this.context.beginPath();
-      for (let counter = 0; counter < linesNumber; counter++) {
-        this.context.strokeStyle =
-        this.state.line.forEach(vector => {
-          this.context.lineTo(vector[0], vector[counter + 1]);
-        })
+      this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+      const linesNumber = this.state.lines.length;
+      for (let counter = 1; counter < linesNumber; counter++) {
+        this.context.beginPath();
+        this.context.strokeStyle = this.state.colors[counter - 1];
+        this.context.strokeWidth = 2;
+        this.state.lines[counter].forEach((y, index) => {
+          this.context.lineTo(this.state.lines[0][index], y);
+        });
+        this.context.stroke();
       }
-      this.context.stroke();
-
 
       if (this.checkRender()) {
         this.render();
@@ -116,3 +126,13 @@ class Chart {
     return true
   }
 }
+
+/**
+ * @typedef {State}
+ */
+const State = {
+  lines: [],
+  colors: [],
+  currentMin: 0,
+  currentMax: 0,
+};
