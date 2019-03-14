@@ -7,85 +7,153 @@
  * @author alexeykcontact@gmail.com (Alex K)
  */
 
-import {data} from './data';
+import { data } from './data';
 
-const app = new App();
-window.addEventListener('DOMContentLoaded', () => app.onLoad(), false);
-window.addEventListener('unload', () => app.onUnLoad(), false);
+const chart = new Chart(0);
+window.addEventListener('DOMContentLoaded', () => chart.onLoad(), false);
+window.addEventListener('unload', () => chart.onUnLoad(), false);
 
 class Chart {
-  constructor() {
+  /**
+   * @param {number} chartNumber
+   */
+  constructor(chartNumber) {
+    /** @type {HTMLCanvasElement} */
+    this.mainCanvas = null;
+    /** @type {HTMLCanvasElement} */
+    this.legendCanvas = null;
+    /** @type {HTMLButtonElement} */
+    this.buttonOk = null;
+    /** @type {HTMLButtonElement} */
+    this.buttonCancel = null;
+    /** @type {CanvasRenderingContext2D} */
+    this.context = null;
+    /** @type {CanvasRenderingContext2D} */
+    this.contextLegend = null;
+    this.chartNumber = chartNumber;
 
-    /** @type {State} */
     this.state = {
-      lines: [],
-      min: 0,
-      max: 0,
+      mainCanvasWidth: 0,
+      mainCanvasHeight: 100,
+      legendCanvasWidth: 0,
+      legendCanvasHeight: 100,
+
+      linesMain: [],
+      linesLegend: [],
+
+      minXMain: 0,
+      maxXMain: 0,
+      minYMain: 0,
+      maxYMain: 0,
+
+      minXLegend: 0,
+      maxXLegend: 0,
+      minYLegend: 0,
+      maxYLegend: 0,
+
       colors: [],
     };
-
-    /** @type {HTMLCanvasElement} */
-    this.mainCanvas;
-    this.legendCanvas;
-    this.buttonOk;
-    this.buttonCancel;
-    /** @type {CanvasRenderingContext2D} */
-    this.context;
-    this.canvasWidth = 100;
-    this.canvasHeight = 100;
+    this.formatDataEntry(this.state, data[chartNumber]);
   }
 
   onLoad() {
-    this.mainCanvas = document.querySelector('.main-canvas');
-    this.legendCanvas = document.querySelector('legend-canvas');
-    this.context = mainCanvas.getContext('2d');
-  }
+    this.mainCanvas = document.querySelector(
+      `main:nth-child(${this.chartNumber}) .main-canvas`,
+    );
+    this.legendCanvas = document.querySelector(
+      `main:nth-child(${this.chartNumber}) .legend-canvas`,
+    );
+    this.context = this.setupCanvas(this.mainCanvas);
+    this.contextLegend = this.setupCanvas(this.legendCanvas);
 
-  onUnLoad() {
+    this.state.mainCanvasWidth = this.mainCanvas.width;
+    this.state.mainCanvasHeight = this.mainCanvas.height;
+    this.state.legendCanvasWidth = this.legendCanvas.width;
+    this.state.legendCanvasHeight = this.legendCanvas.height;
+
+    this.maxXMain = this.mainCanvas.width;
+    this.maxYMain = this.mainCanvas.height;
+    this.maxXLegend = this.legendCanvas.width;
+    this.maxYLegend = this.legendCanvas.height;
+
+    this.render();
   }
 
   /**
-   * @param {{
-    columns: Array.<Array.<string|number>>,
-    colors: Array.<string>
-   }} entry
+   * @type {HTMLCanvasElement} canvasEl
+   * @return {CanvasRenderingContext2D}
+   * */
+  setupCanvas(canvasEl) {
+    const context = canvasEl.getContext('2d');
+    const dpr = window.devicePixelRatio || 1;
+    context.scale(dpr, dpr);
+    return context;
+  }
+
+  onUnLoad() {}
+
+  /**
+   * @param {State} state
+   * @param {DataEntry} entry
    * @return {State}
    */
-  formatDataEntry(entry) {
-    const lines = [];
+  formatDataEntry(state, entry) {
+    const linesMain = [];
+    const linesLegend = [];
     entry.columns.forEach(col => {
-      lines.push(col.slice(1));
+      linesMain.push(col.slice(1));
+      linesLegend.push(col.slice(1));
     });
-    const colors = Object.keys(entry.colors)
-        .map(key => entry.colors[key]);
-    return {
-      lines,
-      colors,
-    };
-  };
+    const colors = Object.keys(entry.colors).map(key => entry.colors[key]);
+
+    state.linesMain = linesMain;
+    state.linesLegend = linesLegend;
+    state.colors = colors;
+
+    return state;
+  }
+
+  normalizeLines() {
+    this.normalizeEntry(
+      this.state.mainCanvasWidth,
+      this.state.mainCanvasHeight,
+      this.state.linesMain,
+    );
+    this.normalizeEntry(
+      this.state.mainCanvasWidth,
+      this.state.mainCanvasHeight,
+      this.state.linesMain,
+    );
+  }
 
   /**
-   * @param {number} width
-   * @param {number} height
-   * @param {Array.<Array<number>>} entry
+   * @param {number} canvasWidth
+   * @param {number} canvasHeight
+   * @param {Array.<Array<number>>} lines
    * @return {Array.<Array.<number>>}
    */
-  normalizeEntry(width, height, entry) {
-    const minX = entry[0];
-    const maxX = entry[entry.length - 1];
-    const maxY = entry.slice(1).reduce((max, line) => Math.max(max,
-        Math.max.apply(...line)), -Infinity);
-    const minY = entry.slice(1).reduce((max, line) => Math.min(max,
-        Math.min.apply(...line)), +Infinity);
+  normalizeEntry(canvasWidth, canvasHeight, lines) {
+    const minX = lines[0][0];
+    const maxX = lines[0][lines.length - 1];
+    const maxY = lines
+      .slice(1)
+      .reduce((max, line) => Math.max(max, Math.max.apply(...line)), -Infinity);
+    const minY = lines
+      .slice(1)
+      .reduce((max, line) => Math.min(max, Math.min.apply(...line)), +Infinity);
 
-    return entry.map(vector => {
+    return lines.map(vector => {
       return [
-        normalizeValue(vector[0], minX, maxX, 0, canvasWidth, true)
-      ].concat(vector.slice(1).map(v => this.normalizeValue(vector[0],
-          minX, maxX, 0, canvasWidth, false)
-      ))
+        this.normalizeValue(vector[0], minX, maxX, 0, canvasWidth, true),
+      ].concat(
+        vector
+          .slice(1)
+          .map(v =>
+            this.normalizeValue(vector[0], minX, maxX, 0, canvasWidth, false),
+          ),
+      );
     });
-  };
+  }
 
   /**
    * @param {number} value
@@ -97,24 +165,34 @@ class Chart {
    * @return {number}
    * */
   normalizeValue(value, minValue, maxValue, screenMin, screenMax, isY) {
-    const coordinate = Math.round(value / (maxValue - minValue) * (screenMax - screenMin));
+    const coordinate = Math.round(
+      (value / (maxValue - minValue)) * (screenMax - screenMin),
+    );
     return isY ? screenMax - coordinate : coordinate;
   }
 
-
   render() {
     requestAnimationFrame(() => {
-      this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-      const linesNumber = this.state.lines.length;
-      for (let counter = 1; counter < linesNumber; counter++) {
-        this.context.beginPath();
-        this.context.strokeStyle = this.state.colors[counter - 1];
-        this.context.strokeWidth = 2;
-        this.state.lines[counter].forEach((y, index) => {
-          this.context.lineTo(this.state.lines[0][index], y);
-        });
-        this.context.stroke();
-      }
+      context.clearRect(
+        0,
+        0,
+        this.state.mainCanvasWidth,
+        this.state.mainCanvasHeight,
+      );
+
+      const normalizedLinesMain = this.normalizeEntry(
+        this.state.mainCanvasWidth,
+        this.state.mainCanvasHeight,
+        this.state.linesMain,
+      );
+      this.renderLines(normalizedLinesMain);
+
+      const normalizedLinesLegend = this.normalizeEntry(
+        this.state.mainCanvasWidth,
+        this.state.mainCanvasHeight,
+        this.state.linesMain,
+      );
+      this.renderLines(normalizedLinesLegend);
 
       if (this.checkRender()) {
         this.render();
@@ -122,17 +200,39 @@ class Chart {
     });
   }
 
+  renderLines(context, lines) {
+    const linesNumber = lines.length;
+    for (let counter = 1; counter < linesNumber; counter++) {
+      context.beginPath();
+      context.strokeStyle = this.state.colors[counter - 1];
+      context.strokeWidth = 2;
+      lines[counter].forEach((y, index) => {
+        context.lineTo(lines[0][index], y);
+      });
+      context.stroke();
+    }
+  }
+
   checkRender() {
-    return true
+    return true;
   }
 }
 
-/**
- * @typedef {State}
- */
-const State = {
-  lines: [],
-  colors: [],
-  currentMin: 0,
-  currentMax: 0,
-};
+/** @typedef {{
+      linesMain: Array.<Array.<number>>,
+      linesLegend: Array.<Array.<number>>,
+
+      minXMain: number,
+      maxXMain: number,
+      minYMain: number,
+      maxYMain: number,
+
+      minXLegend: number,
+      maxXLegend: number,
+      minYLegend: number,
+      maxYLegend: number,
+
+      colors: Array.<string>
+
+}} */
+const State = {};
