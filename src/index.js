@@ -7,7 +7,7 @@
  * @author alexeykcontact@gmail.com (Alex K)
  */
 
-import { data, Data, DataEntry } from './data.js';
+import { data, DataEntry } from './data.js';
 
 class Chart {
   /**
@@ -41,6 +41,11 @@ class Chart {
     this.chartNumber = chartNumber;
     this.dpr = window.devicePixelRatio || 1;
 
+    this.onMouseMoveBound = this.onMouseMove.bind(this);
+
+    /** @type {Element} */
+    this.dragTarget = null;
+
     this.state = {
       shouldRender: true,
 
@@ -55,6 +60,14 @@ class Chart {
       maxX: 0,
       minY: 0,
       maxY: 0,
+
+      minXOrig: 0,
+      maxXOrig: 0,
+      minYOrig: 0,
+      maxYOrig: 0,
+
+      gripLeftPos: 0,
+      gripRightPos: 0,
 
       minXLegend: 0,
       maxXLegend: 0,
@@ -96,9 +109,30 @@ class Chart {
       window.getComputedStyle(this.gripLeft)['width']
     )[0];
 
+    this.createButtons(this.state);
+
     this.attachEvents();
 
     this.render();
+  }
+
+  /** @param {State} state */
+  createButtons(state) {
+    const buttonCont = document.querySelectorAll('.button-cont')[
+      this.chartNumber
+    ];
+    this.state.names.forEach((name, index) => {
+      const button = document.createElement('button');
+      button.classList.add('button');
+      const circle = document.createElement('span');
+      circle.classList.add('circle');
+      circle.style.background = state.colors[index];
+      circle.innerText = '\u2714';
+      const label = document.createTextNode(name);
+      button.appendChild(circle);
+      button.appendChild(label);
+      buttonCont.appendChild(button);
+    });
   }
 
   attachEvents() {
@@ -110,33 +144,102 @@ class Chart {
         this.dragLeft = rect.left;
         this.dragRight = rect.right;
         this.dragWidth = rect.width;
+        e.preventDefault();
       },
       false
     );
+    this.gripRight.addEventListener(
+      'mousedown',
+      e => {
+        this.dragTarget = e.currentTarget;
+        let rect = this.legendCanvas.getBoundingClientRect();
+        this.dragLeft = rect.left;
+        this.dragRight = rect.right;
+        this.dragWidth = rect.width;
+        e.preventDefault();
+      },
+      false
+    );
+    this.window.addEventListener(
+      'mousedown',
+      e => {
+        this.dragTarget = e.currentTarget;
+        let rect = this.legendCanvas.getBoundingClientRect();
+        this.dragLeft = rect.left;
+        this.dragRight = rect.right;
+        this.dragWidth = rect.width;
 
-    this.gripLeft.addEventListener('mousedown', e => {}, false);
-
-    this.window.addEventListener('mousedown', e => {}, false);
-
-    document.addEventListener('mousemove', e => {
-      if (this.dragTarget) {
-        const pageX = e.pageX;
-        console.log('pageX: ', pageX);
-        const relX =
-          pageX >= this.dragRight
-            ? this.dragRight
-            : pageX <= this.dragLeft
-            ? 0
-            : pageX - this.dragLeft;
-        console.log('relX: ', relX);
-        this.state.minX =
-          this.state.minXOrig +
-          ((this.state.maxXOrig - this.state.minXOrig) * relX) / this.dragWidth;
-      }
-    });
+        const windowRect = this.window.getBoundingClientRect();
+        this.windowRectWidth = windowRect.width;
+        this.draggingOffset = e.pageX - windowRect.left;
+      },
+      false
+    );
+    document.addEventListener('mousemove', this.onMouseMoveBound);
     document.addEventListener('mouseup', e => {
       this.dragTarget = null;
     });
+  }
+
+  onMouseMove(e) {
+    if (!this.dragTarget) {
+      return;
+    }
+
+    const { gripLeftPos, gripRightPos } = this.calculateGripPos(this.state);
+
+    if (this.dragTarget === this.gripLeft) {
+      const relX = e.pageX - this.dragLeft;
+      const relXBound =
+        relX >= gripRightPos - this.state.gripWidth
+          ? gripRightPos - this.state.gripWidth
+          : relX <= 0
+          ? 0
+          : relX;
+      console.log('relX: ', relXBound);
+      this.state.minX =
+        this.state.minXOrig +
+        ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
+          this.dragWidth;
+      return;
+    }
+    if (this.dragTarget === this.gripRight) {
+      const relX = e.pageX - this.dragLeft;
+      const relXBound =
+        relX >= this.dragWidth
+          ? this.dragWidth
+          : relX <= gripLeftPos + 2 * this.state.gripWidth
+          ? gripLeftPos + 2 * this.state.gripWidth
+          : relX;
+      console.log('relX: ', relX);
+      this.state.maxX =
+        this.state.minXOrig +
+        ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
+          this.dragWidth;
+      return;
+    }
+    if (this.dragTarget === this.window) {
+      const relX =
+        e.pageX - this.draggingOffset - this.dragLeft - this.state.gripWidth;
+      const relXBound =
+        relX >= this.dragWidth - this.windowRectWidth - 2 * this.state.gripWidth
+          ? this.dragWidth - this.windowRectWidth - 2 * this.state.gripWidth
+          : relX <= 0
+          ? 0
+          : relX;
+      console.log('relX: ', relX);
+
+      this.state.minX =
+        this.state.minXOrig +
+        ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
+          this.dragWidth;
+      this.state.maxX =
+        this.state.minXOrig +
+        ((this.state.maxXOrig - this.state.minXOrig) *
+          (relXBound + this.windowRectWidth + 2 * this.state.gripWidth)) /
+          this.dragWidth;
+      return;
+    }
   }
 
   /**
@@ -171,9 +274,13 @@ class Chart {
     const colors = Object.keys(/** @type {!Object}*/ (entry['colors'])).map(
       key => entry['colors'][key]
     );
+    const names = Object.keys(/** @type {!Object} */ (entry['names'])).map(
+      key => entry['names'][key]
+    );
 
     state.lines = lines;
     state.colors = colors;
+    state.names = names;
 
     return state;
   }
@@ -251,6 +358,7 @@ class Chart {
 
   render() {
     requestAnimationFrame(() => {
+      console.time('render');
       this.context.clearRect(
         0,
         0,
@@ -288,11 +396,32 @@ class Chart {
       }
       this.state.shouldRender = true;
     });
+    console.timeEnd('render');
   }
 
   renderWindow() {
-    const state = this.state;
-    const lines = state.lines;
+    const { gripLeftPos, gripRightPos } = this.calculateGripPos(this.state);
+
+    const glassRightPos = gripRightPos + this.state.gripWidth;
+
+    this.gripLeft.style = `left:${gripLeftPos}px`;
+    this.gripRight.style = `left:${gripRightPos}px`;
+
+    this.glassLeft.style = `width:${gripLeftPos}px`;
+    this.glassRight.style = `left:${glassRightPos}px;`;
+
+    this.window.style = `left:${gripLeftPos +
+      this.state.gripWidth}px;width:${this.state.legendWidth -
+      (gripLeftPos +
+        this.state.gripWidth +
+        (this.state.legendWidth - gripRightPos))}px`;
+  }
+
+  /**
+   * @param {State} state
+   * @return {State} state
+   * */
+  calculateGripPos(state) {
     const minX = state.minX;
 
     const maxX = state.maxX;
@@ -317,20 +446,12 @@ class Chart {
     );
 
     const gripLeftPos = minXPixel;
-    this.gripLeft.style = `left:${gripLeftPos}px`;
     const gripRightPos = maxXPixel - this.state.gripWidth;
-    this.gripRight.style = `left:${gripRightPos}px`;
 
-    this.glassLeft.style = `width:${gripLeftPos}px`;
-    const glassRightPos = gripRightPos + this.state.gripWidth;
-    this.glassRight.style = `left:${glassRightPos}px;`;
+    state.gripLeftPos = gripLeftPos;
+    state.gripRightPos = gripRightPos;
 
-    const style = `left:${gripLeftPos + this.state.gripWidth}px;width:${this
-      .state.legendWidth -
-      (gripLeftPos +
-        this.state.gripWidth +
-        (this.state.legendWidth - gripRightPos))}px`;
-    this.window.style = style;
+    return state;
   }
 
   renderLines(context, lines, lineWidth) {
@@ -367,12 +488,21 @@ new Array(5).fill(1).forEach((value, counter) => {
       minY: number,
       maxY: number,
 
+      minXOrig: number,
+      maxXOrig: number,
+      minYOrig: number,
+      maxYOrig: number,
+
+      gripLeftPos: number,
+      gripRightPos: number,
+
       minXLegend: number,
       maxXLegend: number,
       minYLegend: number,
       maxYLegend: number,
 
-      colors: !Array.<string>
+      colors: !Array.<string>,
+      names: !Array.<string>
 
 }} */
 const State = {};
