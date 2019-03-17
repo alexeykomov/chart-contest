@@ -12,20 +12,22 @@ html(lang='en')
   body
 
     main
-    section#app-0.app
-      header
-        h4.
-          Followers
-        canvas#main-canvas(width=300,height=300)
-        div.legend-cont
-          div.glass-left
-          div.grip-left
-          div.grip
-          div.grip-right
-          div.glass-right
-          canvas#legend-canvas(width=300, height=20)
+      - for (var i = 0; i < 5; ++i) {
+        section.app
+          header
+            h4.
+              Followers
+            canvas.main-canvas
+            div.legend-cont
+              div.glass.glass-left
+              div.grip.grip-left
+              div.window
+              div.grip.grip-right
+              div.glass.glass-right
+              canvas.legend-canvas
 
-        button.button-ok
-        button.button-cancel
+            button.button-ok
+            button.button-cancel
+      - }
 
     script(src='./target/output-compiled-ui.js')
