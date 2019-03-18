@@ -42,6 +42,7 @@ class Chart {
     this.dpr = window.devicePixelRatio || 1;
 
     this.onMouseMoveBound = this.onMouseMove.bind(this);
+    this.onToggleBound = this.onToggle.bind(this);
 
     /** @type {Element} */
     this.dragTarget = null;
@@ -55,6 +56,7 @@ class Chart {
       legendCanvasHeight: 100,
 
       lines: [],
+      enabled: {},
 
       minX: 0,
       maxX: 0,
@@ -79,6 +81,8 @@ class Chart {
     console.log('data[chartNumber]: ', data[chartNumber]);
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
+
+    this.tasks = [];
   }
 
   onLoad() {
@@ -126,13 +130,62 @@ class Chart {
       button.classList.add('button');
       const circle = document.createElement('span');
       circle.classList.add('circle');
-      circle.style.background = state.colors[index];
+      circle.style.background = serializeColor(state.colors[index]);
       circle.innerText = '\u2714';
       const label = document.createTextNode(name);
       button.appendChild(circle);
       button.appendChild(label);
       buttonCont.appendChild(button);
+      button.dataset['chartId'] = String(index);
+
+      button.addEventListener('click', this.onToggleBound, false);
+
+      this.renderButtons(this.state);
     });
+  }
+
+  onToggle(e) {
+    const button = e.currentTarget;
+    const chartId = +button.dataset['chartId'];
+
+    const { minY, maxY } = this.state;
+
+    console.log('minY: ', minY);
+    console.log('maxY: ', maxY);
+    console.log('this.state.enabled: ', this.state.enabled);
+
+    const enabling = !this.state.enabled[chartId];
+    this.state.enabled[chartId] = !this.state.enabled[chartId];
+
+    const { minY: newMinY, maxY: newMaxY } = this.findExtremums(this.state);
+    console.log('newMinY: ', newMinY);
+    console.log('newMaxY: ', newMaxY);
+
+    let steps = 0;
+    const deltaMinY = newMinY - minY;
+    const deltaMaxY = newMaxY - maxY;
+    const STEPS_QUANTITY = 10;
+    const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
+    new Array(STEPS_QUANTITY).fill(1).forEach(() => {
+      this.tasks.push(() => {
+        if (steps === STEPS_QUANTITY) {
+          return;
+        }
+        if (steps < STEPS_QUANTITY - 1) {
+          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
+          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
+          this.state.colors[chartId].a =
+            this.state.colors[chartId].a + deltaOpacity;
+        } else {
+          this.state.minY = newMinY;
+          this.state.maxY = newMaxY;
+          this.state.colors[chartId].a = enabling ? 1 : 0;
+        }
+        steps++;
+      });
+    });
+
+    this.renderButtons(this.state);
   }
 
   attachEvents() {
@@ -268,11 +321,14 @@ class Chart {
    */
   formatDataEntry(state, entry) {
     const lines = [];
-    entry['columns'].forEach(col => {
+    entry['columns'].forEach((col, index) => {
       lines.push(col.slice(1));
+      if (index > 0) {
+        state.enabled[index - 1] = true;
+      }
     });
     const colors = Object.keys(/** @type {!Object}*/ (entry['colors'])).map(
-      key => entry['colors'][key]
+      key => parseHexColorToRgb(entry['colors'][key])
     );
     const names = Object.keys(/** @type {!Object} */ (entry['names'])).map(
       key => entry['names'][key]
@@ -290,15 +346,7 @@ class Chart {
    * @return {State} state
    */
   setExtremums(state) {
-    const lines = state.lines;
-    const minX = lines[0][0];
-    const maxX = lines[0][lines[0].length - 1];
-    const maxY = lines
-      .slice(1)
-      .reduce((max, line) => Math.max(max, Math.max(...line)), -Infinity);
-    const minY = lines
-      .slice(1)
-      .reduce((max, line) => Math.min(max, Math.min(...line)), +Infinity);
+    const { minX, maxX, maxY, minY } = this.findExtremums(state);
 
     state.minX = minX;
     state.maxX = maxX;
@@ -311,6 +359,25 @@ class Chart {
     state.maxYOrig = maxY;
 
     return state;
+  }
+
+  /**
+   * @param {State} state
+   * @return {Extremums}
+   */
+  findExtremums(state) {
+    const lines = state.lines;
+    const minX = lines[0][0];
+    const maxX = lines[0][lines[0].length - 1];
+    const maxY = lines
+      .slice(1)
+      .filter((line, index) => state.enabled[index])
+      .reduce((max, line) => Math.max(max, Math.max(...line)), -Infinity);
+    const minY = lines
+      .slice(1)
+      .filter((line, index) => state.enabled[index])
+      .reduce((max, line) => Math.min(max, Math.min(...line)), +Infinity);
+    return { minX, maxX, maxY, minY };
   }
 
   /**
@@ -358,7 +425,11 @@ class Chart {
 
   render() {
     requestAnimationFrame(() => {
-      console.time('render');
+      // console.time('render');
+      if (this.tasks.length) {
+        this.tasks.pop()();
+      }
+
       this.context.clearRect(
         0,
         0,
@@ -396,8 +467,10 @@ class Chart {
       }
       this.state.shouldRender = true;
     });
-    console.timeEnd('render');
+    // console.timeEnd('render');
   }
+
+  renderButtons(state) {}
 
   renderWindow() {
     const { gripLeftPos, gripRightPos } = this.calculateGripPos(this.state);
@@ -459,7 +532,7 @@ class Chart {
     for (let counter = 1; counter < linesNumber; counter++) {
       context.lineWidth = lineWidth;
       context.beginPath();
-      context.strokeStyle = this.state.colors[counter - 1];
+      context.strokeStyle = serializeColor(this.state.colors[counter - 1]);
       lines[counter].forEach((y, index) => {
         context.lineTo(lines[0][index], y);
       });
@@ -477,6 +550,22 @@ new Array(5).fill(1).forEach((value, counter) => {
   window.addEventListener('DOMContentLoaded', () => chart.onLoad(), false);
   window.addEventListener('unload', () => chart.onUnLoad(), false);
 });
+
+const parseHexColorToRgb = hex => {
+  const withoutHash = hex.slice(1);
+  const rgba = {
+    r: parseInt(withoutHash.slice(0, 2), 16),
+    g: parseInt(withoutHash.slice(2, 4), 16),
+    b: parseInt(withoutHash.slice(4), 16),
+    a: 1,
+  };
+  console.log('rgba: ', rgba);
+  return rgba;
+};
+
+const serializeColor = ({ r, g, b, a }) => {
+  return `rgba(${r},${g},${b},${a})`;
+};
 
 /** @typedef {{
       shouldRender: boolean,
@@ -506,3 +595,8 @@ new Array(5).fill(1).forEach((value, counter) => {
 
 }} */
 const State = {};
+
+/**
+ * @typedef {{minX: number, maxX: number, minY: number, maxY: number}}
+ * */
+const Extremums = {};

@@ -49,7 +49,7 @@ main {
     top: 0;
     height: 40px;
     width: 10px;
-    background-color: rgba(230, 237, 241, 0.7);
+    background-color: rgba(230, 237, 241, 0.9);
 }
 
 .grip-left {
@@ -64,7 +64,7 @@ main {
     position: absolute;
     top: 0;
     height: 40px;
-    background-color: rgba(248, 250, 254, 0.7);
+    background-color: rgba(248, 250, 254, 0.9);
 }
 
 .glass-left {
@@ -80,8 +80,8 @@ main {
     position: absolute;
     top: 0;
     height: 40px;
-    border-top: 1px solid rgba(230, 237, 241, 0.7);
-    border-bottom: 1px solid rgba(230, 237, 241, 0.7);
+    border-top: 1px solid rgba(230, 237, 241, 0.9);
+    border-bottom: 1px solid rgba(230, 237, 241, 0.9);
     /*cursor: ew-resize;*/
 }
 
