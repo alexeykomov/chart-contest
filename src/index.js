@@ -82,7 +82,8 @@ class Chart {
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
 
-    this.tasks = [];
+    /** @type {Array.<Array.<function():void>>} */
+    this.taskBatches = [];
   }
 
   onLoad() {
@@ -166,8 +167,8 @@ class Chart {
     const deltaMaxY = newMaxY - maxY;
     const STEPS_QUANTITY = 10;
     const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
-    new Array(STEPS_QUANTITY).fill(1).forEach(() => {
-      this.tasks.push(() => {
+    this.taskBatches.push(
+      new Array(STEPS_QUANTITY).fill(1).map(v => () => {
         if (steps === STEPS_QUANTITY) {
           return;
         }
@@ -182,8 +183,8 @@ class Chart {
           this.state.colors[chartId].a = enabling ? 1 : 0;
         }
         steps++;
-      });
-    });
+      })
+    );
 
     this.renderButtons(this.state);
   }
@@ -254,6 +255,8 @@ class Chart {
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
+
+      this.animateWindowDelayed();
       return;
     }
     if (this.dragTarget === this.gripRight) {
@@ -269,6 +272,7 @@ class Chart {
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
+      this.animateWindowDelayed();
       return;
     }
     if (this.dragTarget === this.window) {
@@ -291,8 +295,45 @@ class Chart {
         ((this.state.maxXOrig - this.state.minXOrig) *
           (relXBound + this.windowRectWidth + 2 * this.state.gripWidth)) /
           this.dragWidth;
+      this.animateWindowDelayed();
       return;
     }
+  }
+
+  animateWindowDelayed() {
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      this.animateWindow();
+    }, 200);
+  }
+
+  animateWindow() {
+    let steps = 0;
+    const {minY: newMinY, maxY: newMaxY} = this.findYExtremumsInInterval(
+        this.state,
+        this.state.minX,
+        this.state.maxX
+    );
+    console.log('newMinY: ', newMinY);
+    console.log('newMaxY: ', newMaxY);
+    const deltaMinY = newMinY - this.state.minY;
+    const deltaMaxY = newMaxY - this.state.maxY;
+    const STEPS_QUANTITY = 10;
+    this.taskBatches.push(
+        new Array(STEPS_QUANTITY).fill(1).map(v => () => {
+          if (steps === STEPS_QUANTITY) {
+            return;
+          }
+          if (steps < STEPS_QUANTITY - 1) {
+            this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
+            this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
+          } else {
+            this.state.minY = newMinY;
+            this.state.maxY = newMaxY;
+          }
+          steps++;
+        })
+    );
   }
 
   /**
@@ -382,6 +423,59 @@ class Chart {
 
   /**
    * @param {State} state
+   * @param {number} minX
+   * @param {number} maxX
+   * @return {{minY: number, maxY: number}}
+   */
+  findYExtremumsInInterval(state, minX, maxX) {
+    const lines = state.lines;
+    const xs = lines[0];
+    let searchStartIndex = 0;
+    for (let counter = 0; counter < xs.length; counter++) {
+      console.log('minX: ', minX);
+      console.log('xs[counter]: ', xs[counter]);
+      console.log('counter: ', counter);
+      if (xs[counter] >= minX && counter - 1 >= 0) {
+        searchStartIndex = counter - 1;
+        break;
+      }
+    }
+        console.log('searchStartIndex: ', searchStartIndex);
+    let searchEndIndex = xs.length - 1;
+    for (let counter = xs.length - 1; counter >= 0; counter--) {
+      if (xs[counter] <= maxX   && counter + 1 < xs.length - 1) {
+        searchEndIndex = counter + 1;
+        break;
+      }
+    }
+        console.log('searchEndIndex: ', searchEndIndex);
+    const maxY = lines
+      .slice(1)
+      .filter((line, index) => state.enabled[index])
+      .reduce(
+        (max, line) =>
+          Math.max(
+            max,
+            Math.max(...line.slice(searchStartIndex, searchEndIndex + 1))
+          ),
+        -Infinity
+      );
+    const minY = lines
+      .slice(1)
+      .filter((line, index) => state.enabled[index])
+      .reduce(
+        (max, line) =>
+          Math.min(
+            max,
+            Math.min(...line.slice(searchStartIndex, searchEndIndex + 1))
+          ),
+        +Infinity
+      );
+    return { maxY, minY };
+  }
+
+  /**
+   * @param {State} state
    * @param {number} canvasWidth
    * @param {number} canvasHeight
    * @param {boolean} useOrig
@@ -425,10 +519,14 @@ class Chart {
 
   render() {
     requestAnimationFrame(() => {
-      // console.time('render');
-      if (this.tasks.length) {
-        this.tasks.pop()();
-      }
+      //console.time('render');
+        this.taskBatches.forEach(batch => {
+          if (batch.length) {
+            batch.pop()();
+          }
+        });
+        this.taskBatches = this.taskBatches.filter(batch => !!batch.length);
+
 
       this.context.clearRect(
         0,
@@ -467,7 +565,7 @@ class Chart {
       }
       this.state.shouldRender = true;
     });
-    // console.timeEnd('render');
+    //console.timeEnd('render');
   }
 
   renderButtons(state) {}
@@ -541,7 +639,7 @@ class Chart {
   }
 
   checkRender() {
-    return this.state.shouldRender;
+    return true;
   }
 }
 
