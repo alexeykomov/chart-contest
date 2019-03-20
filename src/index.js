@@ -82,8 +82,8 @@ class Chart {
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
 
-    /** @type {Array.<Array.<function():void>>} */
-    this.taskBatches = [];
+    /** @type {Map.<AnimationTypes, Array.<function():void>>} */
+    this.taskBatches = new Map();
   }
 
   onLoad() {
@@ -167,7 +167,7 @@ class Chart {
     const deltaMaxY = newMaxY - maxY;
     const STEPS_QUANTITY = 10;
     const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
-    this.taskBatches.push(
+    this.taskBatches.set(AnimationTypes.Toggle,
       new Array(STEPS_QUANTITY).fill(1).map(v => () => {
         if (steps === STEPS_QUANTITY) {
           return;
@@ -256,7 +256,7 @@ class Chart {
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
 
-      this.animateWindowDelayed();
+      this.animateWindow();
       return;
     }
     if (this.dragTarget === this.gripRight) {
@@ -272,7 +272,7 @@ class Chart {
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
-      this.animateWindowDelayed();
+      this.animateWindow();
       return;
     }
     if (this.dragTarget === this.window) {
@@ -295,7 +295,7 @@ class Chart {
         ((this.state.maxXOrig - this.state.minXOrig) *
           (relXBound + this.windowRectWidth + 2 * this.state.gripWidth)) /
           this.dragWidth;
-      this.animateWindowDelayed();
+      this.animateWindow();
       return;
     }
   }
@@ -319,7 +319,7 @@ class Chart {
     const deltaMinY = newMinY - this.state.minY;
     const deltaMaxY = newMaxY - this.state.maxY;
     const STEPS_QUANTITY = 10;
-    this.taskBatches.push(
+    this.taskBatches.set(AnimationTypes.Drag,
         new Array(STEPS_QUANTITY).fill(1).map(v => () => {
           if (steps === STEPS_QUANTITY) {
             return;
@@ -525,7 +525,7 @@ class Chart {
             batch.pop()();
           }
         });
-        this.taskBatches = this.taskBatches.filter(batch => !!batch.length);
+        this.taskBatches = new Map([...this.taskBatches.entries()].filter(([,batch]) => !!batch.length));
 
 
       this.context.clearRect(
@@ -639,7 +639,7 @@ class Chart {
   }
 
   checkRender() {
-    return true;
+    return this.chartNumber === 0;
   }
 }
 
@@ -693,6 +693,12 @@ const serializeColor = ({ r, g, b, a }) => {
 
 }} */
 const State = {};
+
+/** @enum {string} */
+const AnimationTypes = {
+  Toggle: 'Toggle',
+  Drag: 'Drag'
+};
 
 /**
  * @typedef {{minX: number, maxX: number, minY: number, maxY: number}}

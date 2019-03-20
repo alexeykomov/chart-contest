@@ -4,37 +4,266 @@
     return $index$jscomp$68$$ < $array$jscomp$6$$.length ? {done:!1, value:$array$jscomp$6$$[$index$jscomp$68$$++]} : {done:!0};
   };
 }
-function $$jscomp$arrayFromIterable$$($JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$) {
-  if (!($JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$ instanceof Array)) {
-    var $i$jscomp$inline_13_iteratorFunction$jscomp$inline_10$$ = "undefined" != typeof Symbol && Symbol.iterator && $JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$[Symbol.iterator];
-    $JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$ = $i$jscomp$inline_13_iteratorFunction$jscomp$inline_10$$ ? $i$jscomp$inline_13_iteratorFunction$jscomp$inline_10$$.call($JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$) : {next:$$jscomp$arrayIteratorImpl$$($JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$)};
-    for (var $arr$jscomp$inline_14$$ = []; !($i$jscomp$inline_13_iteratorFunction$jscomp$inline_10$$ = $JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$.next()).done;) {
-      $arr$jscomp$inline_14$$.push($i$jscomp$inline_13_iteratorFunction$jscomp$inline_10$$.value);
-    }
-    $JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$ = $arr$jscomp$inline_14$$;
-  }
-  return $JSCompiler_inline_result$jscomp$6_JSCompiler_temp$jscomp$5_iterable$jscomp$3$$;
+function $$jscomp$makeIterator$$($iterable$jscomp$2$$) {
+  var $iteratorFunction$$ = "undefined" != typeof Symbol && Symbol.iterator && $iterable$jscomp$2$$[Symbol.iterator];
+  return $iteratorFunction$$ ? $iteratorFunction$$.call($iterable$jscomp$2$$) : {next:$$jscomp$arrayIteratorImpl$$($iterable$jscomp$2$$)};
 }
-var $$jscomp$defineProperty$$ = "function" == typeof Object.defineProperties ? Object.defineProperty : function($target$jscomp$83$$, $property$jscomp$4$$, $descriptor$jscomp$1$$) {
-  $target$jscomp$83$$ != Array.prototype && $target$jscomp$83$$ != Object.prototype && ($target$jscomp$83$$[$property$jscomp$4$$] = $descriptor$jscomp$1$$.value);
-}, $$jscomp$global$$ = "undefined" != typeof window && window === this ? this : "undefined" != typeof global && null != global ? global : this;
-function $$jscomp$polyfill$$($property$jscomp$5_split_target$jscomp$84$$, $impl_polyfill$$) {
+function $$jscomp$arrayFromIterable$$($JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$) {
+  if (!($JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$ instanceof Array)) {
+    $JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$ = $$jscomp$makeIterator$$($JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$);
+    for (var $i$jscomp$inline_9$$, $arr$jscomp$inline_10$$ = []; !($i$jscomp$inline_9$$ = $JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$.next()).done;) {
+      $arr$jscomp$inline_10$$.push($i$jscomp$inline_9$$.value);
+    }
+    $JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$ = $arr$jscomp$inline_10$$;
+  }
+  return $JSCompiler_temp$jscomp$5_iterable$jscomp$3_iterator$jscomp$inline_8$$;
+}
+var $$jscomp$global$$ = "undefined" != typeof window && window === this ? this : "undefined" != typeof global && null != global ? global : this, $$jscomp$defineProperty$$ = "function" == typeof Object.defineProperties ? Object.defineProperty : function($target$jscomp$84$$, $property$jscomp$4$$, $descriptor$jscomp$1$$) {
+  $target$jscomp$84$$ != Array.prototype && $target$jscomp$84$$ != Object.prototype && ($target$jscomp$84$$[$property$jscomp$4$$] = $descriptor$jscomp$1$$.value);
+};
+function $$jscomp$initSymbol$$() {
+  $$jscomp$initSymbol$$ = function $$$jscomp$initSymbol$$$() {
+  };
+  $$jscomp$global$$.Symbol || ($$jscomp$global$$.Symbol = $$jscomp$Symbol$$);
+}
+function $$jscomp$SymbolClass$$($id$jscomp$5$$, $opt_description$jscomp$1$$) {
+  this.$c$ = $id$jscomp$5$$;
+  $$jscomp$defineProperty$$(this, "description", {configurable:!0, writable:!0, value:$opt_description$jscomp$1$$});
+}
+$$jscomp$SymbolClass$$.prototype.toString = function $$$jscomp$SymbolClass$$$$toString$() {
+  return this.$c$;
+};
+var $$jscomp$Symbol$$ = function() {
+  function $Symbol$jscomp$1$$($opt_description$jscomp$2$$) {
+    if (this instanceof $Symbol$jscomp$1$$) {
+      throw new TypeError("Symbol is not a constructor");
+    }
+    return new $$jscomp$SymbolClass$$("jscomp_symbol_" + ($opt_description$jscomp$2$$ || "") + "_" + $counter$$++, $opt_description$jscomp$2$$);
+  }
+  var $counter$$ = 0;
+  return $Symbol$jscomp$1$$;
+}();
+function $$jscomp$initSymbolIterator$$() {
+  $$jscomp$initSymbol$$();
+  var $symbolIterator$$ = $$jscomp$global$$.Symbol.iterator;
+  $symbolIterator$$ || ($symbolIterator$$ = $$jscomp$global$$.Symbol.iterator = $$jscomp$global$$.Symbol("Symbol.iterator"));
+  "function" != typeof Array.prototype[$symbolIterator$$] && $$jscomp$defineProperty$$(Array.prototype, $symbolIterator$$, {configurable:!0, writable:!0, value:function() {
+    return $$jscomp$iteratorPrototype$$($$jscomp$arrayIteratorImpl$$(this));
+  }});
+  $$jscomp$initSymbolIterator$$ = function $$$jscomp$initSymbolIterator$$$() {
+  };
+}
+function $$jscomp$iteratorPrototype$$($iterator$jscomp$7_next$$) {
+  $$jscomp$initSymbolIterator$$();
+  $iterator$jscomp$7_next$$ = {next:$iterator$jscomp$7_next$$};
+  $iterator$jscomp$7_next$$[$$jscomp$global$$.Symbol.iterator] = function $$iterator$jscomp$7_next$$$$$jscomp$global$$$Symbol$iterator$() {
+    return this;
+  };
+  return $iterator$jscomp$7_next$$;
+}
+function $$jscomp$owns$$($obj$jscomp$25$$, $prop$jscomp$2$$) {
+  return Object.prototype.hasOwnProperty.call($obj$jscomp$25$$, $prop$jscomp$2$$);
+}
+function $$jscomp$polyfill$$($property$jscomp$5_split_target$jscomp$85$$, $impl_polyfill$$) {
   if ($impl_polyfill$$) {
-    var $obj$jscomp$25$$ = $$jscomp$global$$;
-    $property$jscomp$5_split_target$jscomp$84$$ = $property$jscomp$5_split_target$jscomp$84$$.split(".");
-    for (var $i$jscomp$4_orig$$ = 0; $i$jscomp$4_orig$$ < $property$jscomp$5_split_target$jscomp$84$$.length - 1; $i$jscomp$4_orig$$++) {
-      var $key$jscomp$37$$ = $property$jscomp$5_split_target$jscomp$84$$[$i$jscomp$4_orig$$];
-      $key$jscomp$37$$ in $obj$jscomp$25$$ || ($obj$jscomp$25$$[$key$jscomp$37$$] = {});
-      $obj$jscomp$25$$ = $obj$jscomp$25$$[$key$jscomp$37$$];
+    var $obj$jscomp$26$$ = $$jscomp$global$$;
+    $property$jscomp$5_split_target$jscomp$85$$ = $property$jscomp$5_split_target$jscomp$85$$.split(".");
+    for (var $i$jscomp$4_orig$$ = 0; $i$jscomp$4_orig$$ < $property$jscomp$5_split_target$jscomp$85$$.length - 1; $i$jscomp$4_orig$$++) {
+      var $key$jscomp$38$$ = $property$jscomp$5_split_target$jscomp$85$$[$i$jscomp$4_orig$$];
+      $key$jscomp$38$$ in $obj$jscomp$26$$ || ($obj$jscomp$26$$[$key$jscomp$38$$] = {});
+      $obj$jscomp$26$$ = $obj$jscomp$26$$[$key$jscomp$38$$];
     }
-    $property$jscomp$5_split_target$jscomp$84$$ = $property$jscomp$5_split_target$jscomp$84$$[$property$jscomp$5_split_target$jscomp$84$$.length - 1];
-    $i$jscomp$4_orig$$ = $obj$jscomp$25$$[$property$jscomp$5_split_target$jscomp$84$$];
+    $property$jscomp$5_split_target$jscomp$85$$ = $property$jscomp$5_split_target$jscomp$85$$[$property$jscomp$5_split_target$jscomp$85$$.length - 1];
+    $i$jscomp$4_orig$$ = $obj$jscomp$26$$[$property$jscomp$5_split_target$jscomp$85$$];
     $impl_polyfill$$ = $impl_polyfill$$($i$jscomp$4_orig$$);
-    $impl_polyfill$$ != $i$jscomp$4_orig$$ && null != $impl_polyfill$$ && $$jscomp$defineProperty$$($obj$jscomp$25$$, $property$jscomp$5_split_target$jscomp$84$$, {configurable:!0, writable:!0, value:$impl_polyfill$$});
+    $impl_polyfill$$ != $i$jscomp$4_orig$$ && null != $impl_polyfill$$ && $$jscomp$defineProperty$$($obj$jscomp$26$$, $property$jscomp$5_split_target$jscomp$85$$, {configurable:!0, writable:!0, value:$impl_polyfill$$});
   }
 }
+$$jscomp$polyfill$$("WeakMap", function($NativeWeakMap$$) {
+  function $PolyfillWeakMap$$($iter_opt_iterable$jscomp$4$$) {
+    this.$c$ = ($index$jscomp$69$$ += Math.random() + 1).toString();
+    if ($iter_opt_iterable$jscomp$4$$) {
+      $iter_opt_iterable$jscomp$4$$ = $$jscomp$makeIterator$$($iter_opt_iterable$jscomp$4$$);
+      for (var $entry_item$$; !($entry_item$$ = $iter_opt_iterable$jscomp$4$$.next()).done;) {
+        $entry_item$$ = $entry_item$$.value, this.set($entry_item$$[0], $entry_item$$[1]);
+      }
+    }
+  }
+  function $WeakMapMembership$$() {
+  }
+  function $insert$$($target$jscomp$86$$) {
+    $$jscomp$owns$$($target$jscomp$86$$, $prop$jscomp$3$$) || $$jscomp$defineProperty$$($target$jscomp$86$$, $prop$jscomp$3$$, {value:new $WeakMapMembership$$});
+  }
+  function $patch$$($name$jscomp$69$$) {
+    var $prev$$ = Object[$name$jscomp$69$$];
+    $prev$$ && (Object[$name$jscomp$69$$] = function $Object$$name$jscomp$69$$$($target$jscomp$87$$) {
+      if ($target$jscomp$87$$ instanceof $WeakMapMembership$$) {
+        return $target$jscomp$87$$;
+      }
+      $insert$$($target$jscomp$87$$);
+      return $prev$$($target$jscomp$87$$);
+    });
+  }
+  if (function isConformant() {
+    if (!$NativeWeakMap$$ || !Object.seal) {
+      return !1;
+    }
+    try {
+      var $x$jscomp$83$$ = Object.seal({}), $y$jscomp$68$$ = Object.seal({}), $map$$ = new $NativeWeakMap$$([[$x$jscomp$83$$, 2], [$y$jscomp$68$$, 3]]);
+      if (2 != $map$$.get($x$jscomp$83$$) || 3 != $map$$.get($y$jscomp$68$$)) {
+        return !1;
+      }
+      $map$$.delete($x$jscomp$83$$);
+      $map$$.set($y$jscomp$68$$, 4);
+      return !$map$$.has($x$jscomp$83$$) && 4 == $map$$.get($y$jscomp$68$$);
+    } catch ($err$jscomp$4$$) {
+      return !1;
+    }
+  }()) {
+    return $NativeWeakMap$$;
+  }
+  var $prop$jscomp$3$$ = "$jscomp_hidden_" + Math.random();
+  $patch$$("freeze");
+  $patch$$("preventExtensions");
+  $patch$$("seal");
+  var $index$jscomp$69$$ = 0;
+  $PolyfillWeakMap$$.prototype.set = function $$PolyfillWeakMap$$$$set$($key$jscomp$39$$, $value$jscomp$86$$) {
+    $insert$$($key$jscomp$39$$);
+    if (!$$jscomp$owns$$($key$jscomp$39$$, $prop$jscomp$3$$)) {
+      throw Error("WeakMap key fail: " + $key$jscomp$39$$);
+    }
+    $key$jscomp$39$$[$prop$jscomp$3$$][this.$c$] = $value$jscomp$86$$;
+    return this;
+  };
+  $PolyfillWeakMap$$.prototype.get = function $$PolyfillWeakMap$$$$get$($key$jscomp$40$$) {
+    return $$jscomp$owns$$($key$jscomp$40$$, $prop$jscomp$3$$) ? $key$jscomp$40$$[$prop$jscomp$3$$][this.$c$] : void 0;
+  };
+  $PolyfillWeakMap$$.prototype.has = function $$PolyfillWeakMap$$$$has$($key$jscomp$41$$) {
+    return $$jscomp$owns$$($key$jscomp$41$$, $prop$jscomp$3$$) && $$jscomp$owns$$($key$jscomp$41$$[$prop$jscomp$3$$], this.$c$);
+  };
+  $PolyfillWeakMap$$.prototype.delete = function $$PolyfillWeakMap$$$$delete$($key$jscomp$42$$) {
+    return $$jscomp$owns$$($key$jscomp$42$$, $prop$jscomp$3$$) && $$jscomp$owns$$($key$jscomp$42$$[$prop$jscomp$3$$], this.$c$) ? delete $key$jscomp$42$$[$prop$jscomp$3$$][this.$c$] : !1;
+  };
+  return $PolyfillWeakMap$$;
+});
+$$jscomp$polyfill$$("Map", function($NativeMap$$) {
+  function $createHead$$() {
+    var $head$$ = {};
+    return $head$$.$previous$ = $head$$.next = $head$$.head = $head$$;
+  }
+  function $makeIterator$$($map$jscomp$3$$, $func$jscomp$3$$) {
+    var $entry$jscomp$8$$ = $map$jscomp$3$$.$c$;
+    return $$jscomp$iteratorPrototype$$(function() {
+      if ($entry$jscomp$8$$) {
+        for (; $entry$jscomp$8$$.head != $map$jscomp$3$$.$c$;) {
+          $entry$jscomp$8$$ = $entry$jscomp$8$$.$previous$;
+        }
+        for (; $entry$jscomp$8$$.next != $entry$jscomp$8$$.head;) {
+          return $entry$jscomp$8$$ = $entry$jscomp$8$$.next, {done:!1, value:$func$jscomp$3$$($entry$jscomp$8$$)};
+        }
+        $entry$jscomp$8$$ = null;
+      }
+      return {done:!0, value:void 0};
+    });
+  }
+  function $maybeGetEntry$$($index$jscomp$70_map$jscomp$2$$, $key$jscomp$48$$) {
+    var $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ = $key$jscomp$48$$ && typeof $key$jscomp$48$$;
+    "object" == $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ || "function" == $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ ? $idMap$$.has($key$jscomp$48$$) ? $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ = $idMap$$.get($key$jscomp$48$$) : ($id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ = "" + ++$mapIndex$$, $idMap$$.set($key$jscomp$48$$, $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$)) : $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$ = 
+    "p_" + $key$jscomp$48$$;
+    var $list$$ = $index$jscomp$70_map$jscomp$2$$.$f$[$id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$];
+    if ($list$$ && $$jscomp$owns$$($index$jscomp$70_map$jscomp$2$$.$f$, $id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$)) {
+      for ($index$jscomp$70_map$jscomp$2$$ = 0; $index$jscomp$70_map$jscomp$2$$ < $list$$.length; $index$jscomp$70_map$jscomp$2$$++) {
+        var $entry$jscomp$7$$ = $list$$[$index$jscomp$70_map$jscomp$2$$];
+        if ($key$jscomp$48$$ !== $key$jscomp$48$$ && $entry$jscomp$7$$.key !== $entry$jscomp$7$$.key || $key$jscomp$48$$ === $entry$jscomp$7$$.key) {
+          return {id:$id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$, list:$list$$, index:$index$jscomp$70_map$jscomp$2$$, $entry$:$entry$jscomp$7$$};
+        }
+      }
+    }
+    return {id:$id$jscomp$6_id$jscomp$inline_14_type$jscomp$inline_13$$, list:$list$$, index:-1, $entry$:void 0};
+  }
+  function $PolyfillMap$$($iter$jscomp$2_opt_iterable$jscomp$5$$) {
+    this.$f$ = {};
+    this.$c$ = $createHead$$();
+    this.size = 0;
+    if ($iter$jscomp$2_opt_iterable$jscomp$5$$) {
+      $iter$jscomp$2_opt_iterable$jscomp$5$$ = $$jscomp$makeIterator$$($iter$jscomp$2_opt_iterable$jscomp$5$$);
+      for (var $entry$jscomp$1_item$jscomp$2$$; !($entry$jscomp$1_item$jscomp$2$$ = $iter$jscomp$2_opt_iterable$jscomp$5$$.next()).done;) {
+        $entry$jscomp$1_item$jscomp$2$$ = $entry$jscomp$1_item$jscomp$2$$.value, this.set($entry$jscomp$1_item$jscomp$2$$[0], $entry$jscomp$1_item$jscomp$2$$[1]);
+      }
+    }
+  }
+  if (function isConformant$jscomp$1() {
+    if (!$NativeMap$$ || "function" != typeof $NativeMap$$ || !$NativeMap$$.prototype.entries || "function" != typeof Object.seal) {
+      return !1;
+    }
+    try {
+      var $key$jscomp$43$$ = Object.seal({x:4}), $map$jscomp$1$$ = new $NativeMap$$($$jscomp$makeIterator$$([[$key$jscomp$43$$, "s"]]));
+      if ("s" != $map$jscomp$1$$.get($key$jscomp$43$$) || 1 != $map$jscomp$1$$.size || $map$jscomp$1$$.get({x:4}) || $map$jscomp$1$$.set({x:4}, "t") != $map$jscomp$1$$ || 2 != $map$jscomp$1$$.size) {
+        return !1;
+      }
+      var $iter$jscomp$1$$ = $map$jscomp$1$$.entries(), $item$jscomp$1$$ = $iter$jscomp$1$$.next();
+      if ($item$jscomp$1$$.done || $item$jscomp$1$$.value[0] != $key$jscomp$43$$ || "s" != $item$jscomp$1$$.value[1]) {
+        return !1;
+      }
+      $item$jscomp$1$$ = $iter$jscomp$1$$.next();
+      return $item$jscomp$1$$.done || 4 != $item$jscomp$1$$.value[0].x || "t" != $item$jscomp$1$$.value[1] || !$iter$jscomp$1$$.next().done ? !1 : !0;
+    } catch ($err$jscomp$5$$) {
+      return !1;
+    }
+  }()) {
+    return $NativeMap$$;
+  }
+  $$jscomp$initSymbolIterator$$();
+  var $idMap$$ = new WeakMap;
+  $PolyfillMap$$.prototype.set = function $$PolyfillMap$$$$set$($key$jscomp$44$$, $value$jscomp$87$$) {
+    $key$jscomp$44$$ = 0 === $key$jscomp$44$$ ? 0 : $key$jscomp$44$$;
+    var $r$jscomp$1$$ = $maybeGetEntry$$(this, $key$jscomp$44$$);
+    $r$jscomp$1$$.list || ($r$jscomp$1$$.list = this.$f$[$r$jscomp$1$$.id] = []);
+    $r$jscomp$1$$.$entry$ ? $r$jscomp$1$$.$entry$.value = $value$jscomp$87$$ : ($r$jscomp$1$$.$entry$ = {next:this.$c$, $previous$:this.$c$.$previous$, head:this.$c$, key:$key$jscomp$44$$, value:$value$jscomp$87$$}, $r$jscomp$1$$.list.push($r$jscomp$1$$.$entry$), this.$c$.$previous$.next = $r$jscomp$1$$.$entry$, this.$c$.$previous$ = $r$jscomp$1$$.$entry$, this.size++);
+    return this;
+  };
+  $PolyfillMap$$.prototype.delete = function $$PolyfillMap$$$$delete$($key$jscomp$45_r$jscomp$2$$) {
+    $key$jscomp$45_r$jscomp$2$$ = $maybeGetEntry$$(this, $key$jscomp$45_r$jscomp$2$$);
+    return $key$jscomp$45_r$jscomp$2$$.$entry$ && $key$jscomp$45_r$jscomp$2$$.list ? ($key$jscomp$45_r$jscomp$2$$.list.splice($key$jscomp$45_r$jscomp$2$$.index, 1), $key$jscomp$45_r$jscomp$2$$.list.length || delete this.$f$[$key$jscomp$45_r$jscomp$2$$.id], $key$jscomp$45_r$jscomp$2$$.$entry$.$previous$.next = $key$jscomp$45_r$jscomp$2$$.$entry$.next, $key$jscomp$45_r$jscomp$2$$.$entry$.next.$previous$ = $key$jscomp$45_r$jscomp$2$$.$entry$.$previous$, $key$jscomp$45_r$jscomp$2$$.$entry$.head = null, 
+    this.size--, !0) : !1;
+  };
+  $PolyfillMap$$.prototype.clear = function $$PolyfillMap$$$$clear$() {
+    this.$f$ = {};
+    this.$c$ = this.$c$.$previous$ = $createHead$$();
+    this.size = 0;
+  };
+  $PolyfillMap$$.prototype.has = function $$PolyfillMap$$$$has$($key$jscomp$46$$) {
+    return !!$maybeGetEntry$$(this, $key$jscomp$46$$).$entry$;
+  };
+  $PolyfillMap$$.prototype.get = function $$PolyfillMap$$$$get$($entry$jscomp$2_key$jscomp$47$$) {
+    return ($entry$jscomp$2_key$jscomp$47$$ = $maybeGetEntry$$(this, $entry$jscomp$2_key$jscomp$47$$).$entry$) && $entry$jscomp$2_key$jscomp$47$$.value;
+  };
+  $PolyfillMap$$.prototype.entries = function $$PolyfillMap$$$$entries$() {
+    return $makeIterator$$(this, function($entry$jscomp$3$$) {
+      return [$entry$jscomp$3$$.key, $entry$jscomp$3$$.value];
+    });
+  };
+  $PolyfillMap$$.prototype.keys = function $$PolyfillMap$$$$keys$() {
+    return $makeIterator$$(this, function($entry$jscomp$4$$) {
+      return $entry$jscomp$4$$.key;
+    });
+  };
+  $PolyfillMap$$.prototype.values = function $$PolyfillMap$$$$values$() {
+    return $makeIterator$$(this, function($entry$jscomp$5$$) {
+      return $entry$jscomp$5$$.value;
+    });
+  };
+  $PolyfillMap$$.prototype.forEach = function $$PolyfillMap$$$$forEach$($callback$jscomp$48$$, $opt_thisArg$jscomp$9$$) {
+    for (var $iter$jscomp$3$$ = this.entries(), $entry$jscomp$6_item$jscomp$3$$; !($entry$jscomp$6_item$jscomp$3$$ = $iter$jscomp$3$$.next()).done;) {
+      $entry$jscomp$6_item$jscomp$3$$ = $entry$jscomp$6_item$jscomp$3$$.value, $callback$jscomp$48$$.call($opt_thisArg$jscomp$9$$, $entry$jscomp$6_item$jscomp$3$$[1], $entry$jscomp$6_item$jscomp$3$$[0], this);
+    }
+  };
+  $PolyfillMap$$.prototype[Symbol.iterator] = $PolyfillMap$$.prototype.entries;
+  var $mapIndex$$ = 0;
+  return $PolyfillMap$$;
+});
 $$jscomp$polyfill$$("Array.prototype.fill", function($orig$jscomp$1$$) {
-  return $orig$jscomp$1$$ ? $orig$jscomp$1$$ : function($value$jscomp$86$$, $i$jscomp$5_opt_start$$, $opt_end$jscomp$11$$) {
+  return $orig$jscomp$1$$ ? $orig$jscomp$1$$ : function($value$jscomp$88$$, $i$jscomp$5_opt_start$$, $opt_end$jscomp$11$$) {
     var $length$jscomp$16$$ = this.length || 0;
     0 > $i$jscomp$5_opt_start$$ && ($i$jscomp$5_opt_start$$ = Math.max(0, $length$jscomp$16$$ + $i$jscomp$5_opt_start$$));
     if (null == $opt_end$jscomp$11$$ || $opt_end$jscomp$11$$ > $length$jscomp$16$$) {
@@ -43,7 +272,7 @@ $$jscomp$polyfill$$("Array.prototype.fill", function($orig$jscomp$1$$) {
     $opt_end$jscomp$11$$ = Number($opt_end$jscomp$11$$);
     0 > $opt_end$jscomp$11$$ && ($opt_end$jscomp$11$$ = Math.max(0, $length$jscomp$16$$ + $opt_end$jscomp$11$$));
     for ($i$jscomp$5_opt_start$$ = Number($i$jscomp$5_opt_start$$ || 0); $i$jscomp$5_opt_start$$ < $opt_end$jscomp$11$$; $i$jscomp$5_opt_start$$++) {
-      this[$i$jscomp$5_opt_start$$] = $value$jscomp$86$$;
+      this[$i$jscomp$5_opt_start$$] = $value$jscomp$88$$;
     }
     return this;
   };
@@ -70,22 +299,22 @@ function $Chart$$module$src$index$$($chartNumber_state$jscomp$inline_17$$) {
   $chartNumber_state$jscomp$inline_17$$.$maxXOrig$ = $maxX$jscomp$inline_20$$;
   $chartNumber_state$jscomp$inline_17$$.$minYOrig$ = $$jscomp$inline_18_minY$jscomp$inline_22$$;
   $chartNumber_state$jscomp$inline_17$$.$maxYOrig$ = $maxY$jscomp$inline_21$$;
-  this.$s$ = [];
+  this.$s$ = new Map;
 }
 function $JSCompiler_StaticMethods_createButtons$$($JSCompiler_StaticMethods_createButtons$self$$, $state$$) {
   var $buttonCont$$ = document.querySelectorAll(".button-cont")[$JSCompiler_StaticMethods_createButtons$self$$.$h$];
-  $JSCompiler_StaticMethods_createButtons$self$$.$c$.names.forEach(function($label$jscomp$4_name$jscomp$69$$, $index$jscomp$70$$) {
+  $JSCompiler_StaticMethods_createButtons$self$$.$c$.names.forEach(function($label$jscomp$4_name$jscomp$70$$, $index$jscomp$72$$) {
     var $button$$ = document.createElement("button");
     $button$$.classList.add("button");
     var $circle$$ = document.createElement("span");
     $circle$$.classList.add("circle");
-    $circle$$.style.background = $serializeColor$$module$src$index$$($state$$.$colors$[$index$jscomp$70$$]);
+    $circle$$.style.background = $serializeColor$$module$src$index$$($state$$.$colors$[$index$jscomp$72$$]);
     $circle$$.innerText = "✔";
-    $label$jscomp$4_name$jscomp$69$$ = document.createTextNode($label$jscomp$4_name$jscomp$69$$);
+    $label$jscomp$4_name$jscomp$70$$ = document.createTextNode($label$jscomp$4_name$jscomp$70$$);
     $button$$.appendChild($circle$$);
-    $button$$.appendChild($label$jscomp$4_name$jscomp$69$$);
+    $button$$.appendChild($label$jscomp$4_name$jscomp$70$$);
     $buttonCont$$.appendChild($button$$);
-    $button$$.dataset.chartId = String($index$jscomp$70$$);
+    $button$$.dataset.chartId = String($index$jscomp$72$$);
     $button$$.addEventListener("click", $JSCompiler_StaticMethods_createButtons$self$$.$K$, !1);
   });
 }
@@ -102,7 +331,7 @@ $Chart$$module$src$index$$.prototype.$J$ = function $$Chart$$module$src$index$$$
   console.log("newMinY: ", $newMinY$$);
   console.log("newMaxY: ", $newMaxY$$);
   var $steps$$ = 0, $deltaMinY$$ = $newMinY$$ - $e$jscomp$7_minY$$, $deltaMaxY$$ = $newMaxY$$ - $$jscomp$destructuring$var0_maxY$$, $deltaOpacity$$ = ($enabling$$ ? 1 : -1) / 10;
-  this.$s$.push(Array(10).fill(1).map(function() {
+  this.$s$.set($AnimationTypes$$module$src$index$Toggle$$, Array(10).fill(1).map(function() {
     return function() {
       10 !== $steps$$ && (9 > $steps$$ ? ($$jscomp$this$jscomp$1$$.$c$.$minY$ += $deltaMinY$$ / 10, $$jscomp$this$jscomp$1$$.$c$.$maxY$ += $deltaMaxY$$ / 10, $$jscomp$this$jscomp$1$$.$c$.$colors$[$chartId$$].$a$ += $deltaOpacity$$) : ($$jscomp$this$jscomp$1$$.$c$.$minY$ = $newMinY$$, $$jscomp$this$jscomp$1$$.$c$.$maxY$ = $newMaxY$$, $$jscomp$this$jscomp$1$$.$c$.$colors$[$chartId$$].$a$ = $enabling$$ ? 1 : 0), $steps$$++);
     };
@@ -145,24 +374,18 @@ $Chart$$module$src$index$$.prototype.$H$ = function $$Chart$$module$src$index$$$
     var $$jscomp$destructuring$var2_gripRightPos$$ = $JSCompiler_StaticMethods_calculateGripPos$$(this, this.$c$), $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = $$jscomp$destructuring$var2_gripRightPos$$.$gripLeftPos$;
     $$jscomp$destructuring$var2_gripRightPos$$ = $$jscomp$destructuring$var2_gripRightPos$$.$gripRightPos$;
     this.$i$ === this.$o$ ? ($gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = $e$jscomp$12_relX$0_relXBound$3$$.pageX - this.$m$, $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ >= $$jscomp$destructuring$var2_gripRightPos$$ - this.$c$.$gripWidth$ ? $$jscomp$destructuring$var2_gripRightPos$$ - this.$c$.$gripWidth$ : 0 >= $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ ? 0 : $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$, console.log("relX: ", 
-    $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$), this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ / this.$f$, $JSCompiler_StaticMethods_animateWindowDelayed$$(this)) : this.$i$ === this.$u$ ? ($e$jscomp$12_relX$0_relXBound$3$$ = $e$jscomp$12_relX$0_relXBound$3$$.pageX - this.$m$, $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = $e$jscomp$12_relX$0_relXBound$3$$ >= this.$f$ ? this.$f$ : $e$jscomp$12_relX$0_relXBound$3$$ <= 
-    $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ + 2 * this.$c$.$gripWidth$ ? $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ + 2 * this.$c$.$gripWidth$ : $e$jscomp$12_relX$0_relXBound$3$$, console.log("relX: ", $e$jscomp$12_relX$0_relXBound$3$$), this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ / this.$f$, $JSCompiler_StaticMethods_animateWindowDelayed$$(this)) : this.$i$ === this.window && ($gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = 
+    $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$), this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$i$ === this.$u$ ? ($e$jscomp$12_relX$0_relXBound$3$$ = $e$jscomp$12_relX$0_relXBound$3$$.pageX - this.$m$, $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = $e$jscomp$12_relX$0_relXBound$3$$ >= this.$f$ ? this.$f$ : $e$jscomp$12_relX$0_relXBound$3$$ <= 
+    $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ + 2 * this.$c$.$gripWidth$ ? $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ + 2 * this.$c$.$gripWidth$ : $e$jscomp$12_relX$0_relXBound$3$$, console.log("relX: ", $e$jscomp$12_relX$0_relXBound$3$$), this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$i$ === this.window && ($gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ = 
     $e$jscomp$12_relX$0_relXBound$3$$.pageX - this.$G$ - this.$m$ - this.$c$.$gripWidth$, $e$jscomp$12_relX$0_relXBound$3$$ = $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ >= this.$f$ - this.$B$ - 2 * this.$c$.$gripWidth$ ? this.$f$ - this.$B$ - 2 * this.$c$.$gripWidth$ : 0 >= $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$ ? 0 : $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$, console.log("relX: ", $gripLeftPos_relX_relX$2_relXBound_relXBound$1$$), this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - 
-    this.$c$.$minXOrig$) * $e$jscomp$12_relX$0_relXBound$3$$ / this.$f$, this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$12_relX$0_relXBound$3$$ + this.$B$ + 2 * this.$c$.$gripWidth$) / this.$f$, $JSCompiler_StaticMethods_animateWindowDelayed$$(this));
+    this.$c$.$minXOrig$) * $e$jscomp$12_relX$0_relXBound$3$$ / this.$f$, this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$12_relX$0_relXBound$3$$ + this.$B$ + 2 * this.$c$.$gripWidth$) / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this));
   }
 };
-function $JSCompiler_StaticMethods_animateWindowDelayed$$($JSCompiler_StaticMethods_animateWindowDelayed$self$$) {
-  clearTimeout($JSCompiler_StaticMethods_animateWindowDelayed$self$$.timeout);
-  $JSCompiler_StaticMethods_animateWindowDelayed$self$$.timeout = setTimeout(function() {
-    $JSCompiler_StaticMethods_animateWindow$$($JSCompiler_StaticMethods_animateWindowDelayed$self$$);
-  }, 200);
-}
 function $JSCompiler_StaticMethods_animateWindow$$($JSCompiler_StaticMethods_animateWindow$self$$) {
   var $steps$jscomp$1$$ = 0, $$jscomp$destructuring$var3$$ = $JSCompiler_StaticMethods_findYExtremumsInInterval$$($JSCompiler_StaticMethods_animateWindow$self$$.$c$, $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$minX$, $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$maxX$), $newMinY$jscomp$1$$ = $$jscomp$destructuring$var3$$.$minY$, $newMaxY$jscomp$1$$ = $$jscomp$destructuring$var3$$.$maxY$;
   console.log("newMinY: ", $newMinY$jscomp$1$$);
   console.log("newMaxY: ", $newMaxY$jscomp$1$$);
   var $deltaMinY$jscomp$1$$ = $newMinY$jscomp$1$$ - $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$minY$, $deltaMaxY$jscomp$1$$ = $newMaxY$jscomp$1$$ - $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$maxY$;
-  $JSCompiler_StaticMethods_animateWindow$self$$.$s$.push(Array(10).fill(1).map(function() {
+  $JSCompiler_StaticMethods_animateWindow$self$$.$s$.set($AnimationTypes$$module$src$index$Drag$$, Array(10).fill(1).map(function() {
     return function() {
       10 !== $steps$jscomp$1$$ && (9 > $steps$jscomp$1$$ ? ($JSCompiler_StaticMethods_animateWindow$self$$.$c$.$minY$ += $deltaMinY$jscomp$1$$ / 10, $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$maxY$ += $deltaMaxY$jscomp$1$$ / 10) : ($JSCompiler_StaticMethods_animateWindow$self$$.$c$.$minY$ = $newMinY$jscomp$1$$, $JSCompiler_StaticMethods_animateWindow$self$$.$c$.$maxY$ = $newMaxY$jscomp$1$$), $steps$jscomp$1$$++);
     };
@@ -175,32 +398,32 @@ function $JSCompiler_StaticMethods_setupCanvas$$($JSCompiler_StaticMethods_setup
   $context$$.scale($JSCompiler_StaticMethods_setupCanvas$self$$.$j$, $JSCompiler_StaticMethods_setupCanvas$self$$.$j$);
   return $context$$;
 }
-function $JSCompiler_StaticMethods_formatDataEntry$$($state$jscomp$1$$, $entry$$) {
+function $JSCompiler_StaticMethods_formatDataEntry$$($state$jscomp$1$$, $entry$jscomp$9$$) {
   var $lines$$ = [];
-  $entry$$.columns.forEach(function($col$$, $index$jscomp$71$$) {
+  $entry$jscomp$9$$.columns.forEach(function($col$$, $index$jscomp$73$$) {
     $lines$$.push($col$$.slice(1));
-    0 < $index$jscomp$71$$ && ($state$jscomp$1$$.enabled[$index$jscomp$71$$ - 1] = !0);
+    0 < $index$jscomp$73$$ && ($state$jscomp$1$$.enabled[$index$jscomp$73$$ - 1] = !0);
   });
-  var $colors$$ = Object.keys($entry$$.colors).map(function($key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$) {
-    $key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$ = $entry$$.colors[$key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$].slice(1);
-    $key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$ = {r:parseInt($key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(0, 2), 16), $g$:parseInt($key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(2, 4), 16), $b$:parseInt($key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(4), 16), $a$:1};
-    console.log("rgba: ", $key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$);
-    return $key$jscomp$38_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$;
-  }), $names$$ = Object.keys($entry$$.names).map(function($key$jscomp$39$$) {
-    return $entry$$.names[$key$jscomp$39$$];
+  var $colors$$ = Object.keys($entry$jscomp$9$$.colors).map(function($key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$) {
+    $key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$ = $entry$jscomp$9$$.colors[$key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$].slice(1);
+    $key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$ = {r:parseInt($key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(0, 2), 16), $g$:parseInt($key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(2, 4), 16), $b$:parseInt($key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$.slice(4), 16), $a$:1};
+    console.log("rgba: ", $key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$);
+    return $key$jscomp$49_rgba$jscomp$inline_26_withoutHash$jscomp$inline_25$$;
+  }), $names$$ = Object.keys($entry$jscomp$9$$.names).map(function($key$jscomp$50$$) {
+    return $entry$jscomp$9$$.names[$key$jscomp$50$$];
   });
   $state$jscomp$1$$.lines = $lines$$;
   $state$jscomp$1$$.$colors$ = $colors$$;
   $state$jscomp$1$$.names = $names$$;
 }
 function $JSCompiler_StaticMethods_findExtremums$$($state$jscomp$3$$) {
-  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$3$$.lines, $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$$, $index$jscomp$72$$) {
-    return $state$jscomp$3$$.enabled[$index$jscomp$72$$];
+  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$3$$.lines, $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$$, $index$jscomp$74$$) {
+    return $state$jscomp$3$$.enabled[$index$jscomp$74$$];
   }).reduce(function($max$$, $line$jscomp$1$$) {
     return Math.max($max$$, Math.max.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$1$$)));
   }, -Infinity);
-  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$jscomp$2$$, $index$jscomp$73$$) {
-    return $state$jscomp$3$$.enabled[$index$jscomp$73$$];
+  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$jscomp$2$$, $index$jscomp$75$$) {
+    return $state$jscomp$3$$.enabled[$index$jscomp$75$$];
   }).reduce(function($max$jscomp$1$$, $line$jscomp$3$$) {
     return Math.min($max$jscomp$1$$, Math.min.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$3$$)));
   }, Infinity);
@@ -222,13 +445,13 @@ function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$4$$,
     }
   }
   console.log("searchEndIndex: ", $searchEndIndex$$);
-  $maxX$jscomp$2_maxY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$4$$, $index$jscomp$74$$) {
-    return $state$jscomp$4$$.enabled[$index$jscomp$74$$];
+  $maxX$jscomp$2_maxY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$4$$, $index$jscomp$76$$) {
+    return $state$jscomp$4$$.enabled[$index$jscomp$76$$];
   }).reduce(function($max$jscomp$2$$, $line$jscomp$5$$) {
     return Math.max($max$jscomp$2$$, Math.max.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$5$$.slice($searchStartIndex$$, $searchEndIndex$$ + 1))));
   }, -Infinity);
-  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$6$$, $index$jscomp$75$$) {
-    return $state$jscomp$4$$.enabled[$index$jscomp$75$$];
+  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$6$$, $index$jscomp$77$$) {
+    return $state$jscomp$4$$.enabled[$index$jscomp$77$$];
   }).reduce(function($max$jscomp$3$$, $line$jscomp$7$$) {
     return Math.min($max$jscomp$3$$, Math.min.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$7$$.slice($searchStartIndex$$, $searchEndIndex$$ + 1))));
   }, Infinity);
@@ -236,26 +459,28 @@ function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$4$$,
 }
 function $JSCompiler_StaticMethods_normalizeEntry$$($JSCompiler_StaticMethods_normalizeEntry$self$$, $state$jscomp$5$$, $canvasWidth$$, $canvasHeight$$, $useOrig$$) {
   var $minX$jscomp$3$$ = $useOrig$$ ? $state$jscomp$5$$.$minXOrig$ : $state$jscomp$5$$.$minX$, $maxX$jscomp$3$$ = $useOrig$$ ? $state$jscomp$5$$.$maxXOrig$ : $state$jscomp$5$$.$maxX$, $maxY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$5$$.$maxYOrig$ : $state$jscomp$5$$.$maxY$, $minY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$5$$.$minYOrig$ : $state$jscomp$5$$.$minY$;
-  return $state$jscomp$5$$.lines.map(function($line$jscomp$8$$, $index$jscomp$76$$) {
-    return 0 === $index$jscomp$76$$ ? $line$jscomp$8$$.map(function($v$jscomp$2$$) {
-      return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$2$$, $minX$jscomp$3$$, $maxX$jscomp$3$$, $canvasWidth$$, !1) / $JSCompiler_StaticMethods_normalizeEntry$self$$.$j$;
-    }) : $line$jscomp$8$$.map(function($v$jscomp$3$$) {
-      return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$3$$, $minY$jscomp$4$$, $maxY$jscomp$4$$, $canvasHeight$$, !0) / $JSCompiler_StaticMethods_normalizeEntry$self$$.$j$;
+  return $state$jscomp$5$$.lines.map(function($line$jscomp$8$$, $index$jscomp$78$$) {
+    return 0 === $index$jscomp$78$$ ? $line$jscomp$8$$.map(function($v$jscomp$3$$) {
+      return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$3$$, $minX$jscomp$3$$, $maxX$jscomp$3$$, $canvasWidth$$, !1) / $JSCompiler_StaticMethods_normalizeEntry$self$$.$j$;
+    }) : $line$jscomp$8$$.map(function($v$jscomp$4$$) {
+      return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$4$$, $minY$jscomp$4$$, $maxY$jscomp$4$$, $canvasHeight$$, !0) / $JSCompiler_StaticMethods_normalizeEntry$self$$.$j$;
     });
   });
 }
-function $JSCompiler_StaticMethods_normalizeValue$$($coordinate_value$jscomp$87$$, $minValue$$, $maxValue$$, $screenMax$$, $isY$$) {
-  $coordinate_value$jscomp$87$$ = ($coordinate_value$jscomp$87$$ - $minValue$$) / (($maxValue$$ - $minValue$$) / $screenMax$$);
-  return $isY$$ ? $screenMax$$ - $coordinate_value$jscomp$87$$ : $coordinate_value$jscomp$87$$;
+function $JSCompiler_StaticMethods_normalizeValue$$($coordinate_value$jscomp$89$$, $minValue$$, $maxValue$$, $screenMax$$, $isY$$) {
+  $coordinate_value$jscomp$89$$ = ($coordinate_value$jscomp$89$$ - $minValue$$) / (($maxValue$$ - $minValue$$) / $screenMax$$);
+  return $isY$$ ? $screenMax$$ - $coordinate_value$jscomp$89$$ : $coordinate_value$jscomp$89$$;
 }
 function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$self$$) {
   requestAnimationFrame(function() {
     $JSCompiler_StaticMethods_render$self$$.$s$.forEach(function($batch$$) {
       $batch$$.length && $batch$$.pop()();
     });
-    $JSCompiler_StaticMethods_render$self$$.$s$ = $JSCompiler_StaticMethods_render$self$$.$s$.filter(function($batch$jscomp$1$$) {
-      return !!$batch$jscomp$1$$.length;
-    });
+    $JSCompiler_StaticMethods_render$self$$.$s$ = new Map([].concat($$jscomp$arrayFromIterable$$($JSCompiler_StaticMethods_render$self$$.$s$.entries())).filter(function($$jscomp$destructuring$var5_$jscomp$destructuring$var6$$) {
+      $$jscomp$destructuring$var5_$jscomp$destructuring$var6$$ = $$jscomp$makeIterator$$($$jscomp$destructuring$var5_$jscomp$destructuring$var6$$);
+      $$jscomp$destructuring$var5_$jscomp$destructuring$var6$$.next();
+      return !!$$jscomp$destructuring$var5_$jscomp$destructuring$var6$$.next().value.length;
+    }));
     $JSCompiler_StaticMethods_render$self$$.$w$.clearRect(0, 0, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasWidth$, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasHeight$);
     var $normalizedLinesLegend_normalizedLinesMain$$ = $JSCompiler_StaticMethods_normalizeEntry$$($JSCompiler_StaticMethods_render$self$$, $JSCompiler_StaticMethods_render$self$$.$c$, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasWidth$, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasHeight$, !1);
     $JSCompiler_StaticMethods_renderLines$$($JSCompiler_StaticMethods_render$self$$, $JSCompiler_StaticMethods_render$self$$.$w$, $normalizedLinesLegend_normalizedLinesMain$$, 2);
@@ -263,19 +488,19 @@ function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$sel
     $normalizedLinesLegend_normalizedLinesMain$$ = $JSCompiler_StaticMethods_normalizeEntry$$($JSCompiler_StaticMethods_render$self$$, $JSCompiler_StaticMethods_render$self$$.$c$, $JSCompiler_StaticMethods_render$self$$.$c$.$legendCanvasWidth$, $JSCompiler_StaticMethods_render$self$$.$c$.$legendCanvasHeight$, !0);
     $JSCompiler_StaticMethods_renderLines$$($JSCompiler_StaticMethods_render$self$$, $JSCompiler_StaticMethods_render$self$$.$A$, $normalizedLinesLegend_normalizedLinesMain$$, 1);
     $JSCompiler_StaticMethods_renderWindow$$($JSCompiler_StaticMethods_render$self$$);
-    $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$self$$);
+    1 === $JSCompiler_StaticMethods_render$self$$.$h$ && $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$self$$);
     $JSCompiler_StaticMethods_render$self$$.$c$.$shouldRender$ = !0;
   });
 }
 function $JSCompiler_StaticMethods_renderWindow$$($JSCompiler_StaticMethods_renderWindow$self$$) {
-  var $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$ = $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_renderWindow$self$$, $JSCompiler_StaticMethods_renderWindow$self$$.$c$), $gripLeftPos$jscomp$1$$ = $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$.$gripLeftPos$;
-  $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$ = $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$.$gripRightPos$;
-  var $glassRightPos$$ = $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$;
+  var $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$ = $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_renderWindow$self$$, $JSCompiler_StaticMethods_renderWindow$self$$.$c$), $gripLeftPos$jscomp$1$$ = $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$.$gripLeftPos$;
+  $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$ = $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$.$gripRightPos$;
+  var $glassRightPos$$ = $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$;
   $JSCompiler_StaticMethods_renderWindow$self$$.$o$.style = "left:" + $gripLeftPos$jscomp$1$$ + "px";
-  $JSCompiler_StaticMethods_renderWindow$self$$.$u$.style = "left:" + $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$ + "px";
+  $JSCompiler_StaticMethods_renderWindow$self$$.$u$.style = "left:" + $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$ + "px";
   $JSCompiler_StaticMethods_renderWindow$self$$.$D$.style = "width:" + $gripLeftPos$jscomp$1$$ + "px";
   $JSCompiler_StaticMethods_renderWindow$self$$.$F$.style = "left:" + $glassRightPos$$ + "px;";
-  $JSCompiler_StaticMethods_renderWindow$self$$.window.style = "left:" + ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$) + "px;width:" + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$ + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - $$jscomp$destructuring$var5_gripRightPos$jscomp$1$$))) + "px";
+  $JSCompiler_StaticMethods_renderWindow$self$$.window.style = "left:" + ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$) + "px;width:" + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$ + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - $$jscomp$destructuring$var7_gripRightPos$jscomp$1$$))) + "px";
 }
 function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_calculateGripPos$self$$, $state$jscomp$7$$) {
   var $gripRightPos$jscomp$2$$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$7$$.$maxX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1) - $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$gripWidth$;
@@ -285,12 +510,12 @@ function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_
 }
 function $JSCompiler_StaticMethods_renderLines$$($JSCompiler_StaticMethods_renderLines$self$$, $context$jscomp$1$$, $lines$jscomp$4$$, $lineWidth$$) {
   for (var $linesNumber$$ = $lines$jscomp$4$$.length, $counter$jscomp$2$$ = 1; $counter$jscomp$2$$ < $linesNumber$$; $counter$jscomp$2$$++) {
-    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$2$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$2$$].forEach(function($y$jscomp$68$$, $index$jscomp$77$$) {
-      $context$jscomp$1$$.lineTo($lines$jscomp$4$$[0][$index$jscomp$77$$], $y$jscomp$68$$);
+    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$2$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$2$$].forEach(function($y$jscomp$69$$, $index$jscomp$79$$) {
+      $context$jscomp$1$$.lineTo($lines$jscomp$4$$[0][$index$jscomp$79$$], $y$jscomp$69$$);
     }), $context$jscomp$1$$.stroke();
   }
 }
-Array(5).fill(1).forEach(function($value$jscomp$88$$, $counter$jscomp$3$$) {
+Array(5).fill(1).forEach(function($value$jscomp$90$$, $counter$jscomp$3$$) {
   var $chart$$ = new $Chart$$module$src$index$$($counter$jscomp$3$$);
   window.addEventListener("DOMContentLoaded", function() {
     $chart$$.$v$ = document.querySelectorAll(".main-canvas")[$chart$$.$h$];
@@ -315,7 +540,8 @@ Array(5).fill(1).forEach(function($value$jscomp$88$$, $counter$jscomp$3$$) {
   window.addEventListener("unload", function() {
   }, !1);
 });
-function $serializeColor$$module$src$index$$($$jscomp$destructuring$var6$$) {
-  return "rgba(" + $$jscomp$destructuring$var6$$.r + "," + $$jscomp$destructuring$var6$$.$g$ + "," + $$jscomp$destructuring$var6$$.$b$ + "," + $$jscomp$destructuring$var6$$.$a$ + ")";
+function $serializeColor$$module$src$index$$($$jscomp$destructuring$var8$$) {
+  return "rgba(" + $$jscomp$destructuring$var8$$.r + "," + $$jscomp$destructuring$var8$$.$g$ + "," + $$jscomp$destructuring$var8$$.$b$ + "," + $$jscomp$destructuring$var8$$.$a$ + ")";
 }
-;})();
+var $AnimationTypes$$module$src$index$Toggle$$ = "Toggle", $AnimationTypes$$module$src$index$Drag$$ = "Drag";
+})();
