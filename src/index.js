@@ -77,13 +77,14 @@ class Chart {
       maxYLegend: 0,
 
       colors: [],
+      initialRender: true,
     };
-    console.log('data[chartNumber]: ', data[chartNumber]);
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
 
     /** @type {Map.<AnimationTypes, Array.<function():void>>} */
     this.taskBatches = new Map();
+    this.renderInProgress = false;
   }
 
   onLoad() {
@@ -132,7 +133,8 @@ class Chart {
       const circle = document.createElement('span');
       circle.classList.add('circle');
       circle.style.background = serializeColor(state.colors[index]);
-      circle.innerText = '\u2714';
+      circle.innerHTML =
+        '<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#ffffff;enable-background:accumulate;" d="m 65.3124,984.14343 -21.5937,22.46867 -9.4063,-8.68742 -6.8124,7.34372 13,12 3.625,3.3125 3.375,-3.5313 25,-25.99992 -7.1876,-6.90625 z" fill="#ffffff" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>';
       const label = document.createTextNode(name);
       button.appendChild(circle);
       button.appendChild(label);
@@ -151,23 +153,22 @@ class Chart {
 
     const { minY, maxY } = this.state;
 
-    console.log('minY: ', minY);
-    console.log('maxY: ', maxY);
-    console.log('this.state.enabled: ', this.state.enabled);
-
     const enabling = !this.state.enabled[chartId];
     this.state.enabled[chartId] = !this.state.enabled[chartId];
 
-    const { minY: newMinY, maxY: newMaxY } = this.findExtremums(this.state);
-    console.log('newMinY: ', newMinY);
-    console.log('newMaxY: ', newMaxY);
+    const { minY: newMinY, maxY: newMaxY } = this.findYExtremumsInInterval(
+      this.state,
+      this.state.minX,
+      this.state.maxX
+    );
 
     let steps = 0;
     const deltaMinY = newMinY - minY;
     const deltaMaxY = newMaxY - maxY;
     const STEPS_QUANTITY = 10;
     const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
-    this.taskBatches.set(AnimationTypes.Toggle,
+    this.taskBatches.set(
+      AnimationTypes.Toggle,
       new Array(STEPS_QUANTITY).fill(1).map(v => () => {
         if (steps === STEPS_QUANTITY) {
           return;
@@ -185,7 +186,7 @@ class Chart {
         steps++;
       })
     );
-
+    this.render();
     this.renderButtons(this.state);
   }
 
@@ -250,7 +251,6 @@ class Chart {
           : relX <= 0
           ? 0
           : relX;
-      console.log('relX: ', relXBound);
       this.state.minX =
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
@@ -267,7 +267,6 @@ class Chart {
           : relX <= gripLeftPos + 2 * this.state.gripWidth
           ? gripLeftPos + 2 * this.state.gripWidth
           : relX;
-      console.log('relX: ', relX);
       this.state.maxX =
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
@@ -284,8 +283,6 @@ class Chart {
           : relX <= 0
           ? 0
           : relX;
-      console.log('relX: ', relX);
-
       this.state.minX =
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
@@ -309,31 +306,31 @@ class Chart {
 
   animateWindow() {
     let steps = 0;
-    const {minY: newMinY, maxY: newMaxY} = this.findYExtremumsInInterval(
-        this.state,
-        this.state.minX,
-        this.state.maxX
+    const { minY: newMinY, maxY: newMaxY } = this.findYExtremumsInInterval(
+      this.state,
+      this.state.minX,
+      this.state.maxX
     );
-    console.log('newMinY: ', newMinY);
-    console.log('newMaxY: ', newMaxY);
     const deltaMinY = newMinY - this.state.minY;
     const deltaMaxY = newMaxY - this.state.maxY;
     const STEPS_QUANTITY = 10;
-    this.taskBatches.set(AnimationTypes.Drag,
-        new Array(STEPS_QUANTITY).fill(1).map(v => () => {
-          if (steps === STEPS_QUANTITY) {
-            return;
-          }
-          if (steps < STEPS_QUANTITY - 1) {
-            this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
-            this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
-          } else {
-            this.state.minY = newMinY;
-            this.state.maxY = newMaxY;
-          }
-          steps++;
-        })
+    this.taskBatches.set(
+      AnimationTypes.Drag,
+      new Array(STEPS_QUANTITY).fill(1).map(v => () => {
+        if (steps === STEPS_QUANTITY) {
+          return;
+        }
+        if (steps < STEPS_QUANTITY - 1) {
+          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
+          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
+        } else {
+          this.state.minY = newMinY;
+          this.state.maxY = newMaxY;
+        }
+        steps++;
+      })
     );
+    this.render();
   }
 
   /**
@@ -432,23 +429,18 @@ class Chart {
     const xs = lines[0];
     let searchStartIndex = 0;
     for (let counter = 0; counter < xs.length; counter++) {
-      console.log('minX: ', minX);
-      console.log('xs[counter]: ', xs[counter]);
-      console.log('counter: ', counter);
       if (xs[counter] >= minX && counter - 1 >= 0) {
         searchStartIndex = counter - 1;
         break;
       }
     }
-        console.log('searchStartIndex: ', searchStartIndex);
     let searchEndIndex = xs.length - 1;
     for (let counter = xs.length - 1; counter >= 0; counter--) {
-      if (xs[counter] <= maxX   && counter + 1 < xs.length - 1) {
+      if (xs[counter] <= maxX && counter + 1 < xs.length - 1) {
         searchEndIndex = counter + 1;
         break;
       }
     }
-        console.log('searchEndIndex: ', searchEndIndex);
     const maxY = lines
       .slice(1)
       .filter((line, index) => state.enabled[index])
@@ -517,7 +509,11 @@ class Chart {
     return isY ? screenMax - coordinate : coordinate;
   }
 
-  render() {
+  render(loop = false) {
+    if (!loop && this.renderInProgress) {
+      return;
+    }
+    this.renderInProgress = true;
     requestAnimationFrame(() => {
       //console.time('render');
         this.taskBatches.forEach(batch => {
@@ -561,9 +557,10 @@ class Chart {
       this.renderWindow();
 
       if (this.checkRender()) {
-        this.render();
+        this.render(true);
+        return;
       }
-      this.state.shouldRender = true;
+      this.renderInProgress = false;
     });
     //console.timeEnd('render');
   }
@@ -639,7 +636,7 @@ class Chart {
   }
 
   checkRender() {
-    return this.chartNumber === 0;
+    return [...this.taskBatches.values()].some(v => !!v.length);
   }
 }
 
@@ -657,7 +654,6 @@ const parseHexColorToRgb = hex => {
     b: parseInt(withoutHash.slice(4), 16),
     a: 1,
   };
-  console.log('rgba: ', rgba);
   return rgba;
 };
 
@@ -691,13 +687,14 @@ const serializeColor = ({ r, g, b, a }) => {
       colors: !Array.<string>,
       names: !Array.<string>
 
+      initialRender: true,
 }} */
 const State = {};
 
 /** @enum {string} */
 const AnimationTypes = {
   Toggle: 'Toggle',
-  Drag: 'Drag'
+  Drag: 'Drag',
 };
 
 /**
