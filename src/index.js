@@ -42,6 +42,7 @@ class Chart {
     this.dpr = window.devicePixelRatio || 1;
 
     this.onMouseMoveBound = this.onMouseMove.bind(this);
+    this.onTouchMoveBound = this.onTouchMove.bind(this);
     this.onToggleBound = this.onToggle.bind(this);
 
     /** @type {Element} */
@@ -102,6 +103,7 @@ class Chart {
     ];
     this.window = document.querySelectorAll('.window')[this.chartNumber];
 
+    this.mainCanvas.style.height = window.getComputedStyle(this.mainCanvas)['width'];
     this.context = this.setupCanvas(this.mainCanvas);
     this.contextLegend = this.setupCanvas(this.legendCanvas);
 
@@ -167,23 +169,28 @@ class Chart {
     const deltaMaxY = newMaxY - maxY;
     const STEPS_QUANTITY = 10;
     const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
+    console.log('start timestamp: ', performance.now());
+    let prevTimestamp = performance.now();
     this.taskBatches.set(
       AnimationTypes.Toggle,
-      new Array(STEPS_QUANTITY).fill(1).map(v => () => {
-        if (steps === STEPS_QUANTITY) {
+      new Array(STEPS_QUANTITY).fill(1).map(v => timestamp => {
+        const stepsToAdd = Math.ceil(Math.floor(timestamp - prevTimestamp) / 17) || 1;
+        prevTimestamp = timestamp;
+        console.log('stepsToAdd: ', stepsToAdd);
+        steps += stepsToAdd;
+
+        if (steps < STEPS_QUANTITY) {
+          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY * stepsToAdd;
+          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY * stepsToAdd;
+          this.state.colors[chartId].a =
+          this.state.colors[chartId].a + deltaOpacity * stepsToAdd;
           return;
         }
-        if (steps < STEPS_QUANTITY - 1) {
-          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
-          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
-          this.state.colors[chartId].a =
-            this.state.colors[chartId].a + deltaOpacity;
-        } else {
-          this.state.minY = newMinY;
-          this.state.maxY = newMaxY;
-          this.state.colors[chartId].a = enabling ? 1 : 0;
-        }
-        steps++;
+
+        this.state.minY = newMinY;
+        this.state.maxY = newMaxY;
+        this.state.colors[chartId].a = enabling ? 1 : 0;
+        this.taskBatches.set(AnimationTypes.Toggle, []);
       })
     );
     this.render();
@@ -193,6 +200,18 @@ class Chart {
   attachEvents() {
     this.gripLeft.addEventListener(
       'mousedown',
+      e => {
+        this.dragTarget = e.currentTarget;
+        let rect = this.legendCanvas.getBoundingClientRect();
+        this.dragLeft = rect.left;
+        this.dragRight = rect.right;
+        this.dragWidth = rect.width;
+        e.preventDefault();
+      },
+      false
+    );
+    this.gripLeft.addEventListener(
+      'touchstart',
       e => {
         this.dragTarget = e.currentTarget;
         let rect = this.legendCanvas.getBoundingClientRect();
@@ -215,6 +234,18 @@ class Chart {
       },
       false
     );
+    this.gripRight.addEventListener(
+      'touchstart',
+      e => {
+        this.dragTarget = e.currentTarget;
+        let rect = this.legendCanvas.getBoundingClientRect();
+        this.dragLeft = rect.left;
+        this.dragRight = rect.right;
+        this.dragWidth = rect.width;
+        e.preventDefault();
+      },
+      false
+    );
     this.window.addEventListener(
       'mousedown',
       e => {
@@ -227,11 +258,32 @@ class Chart {
         const windowRect = this.window.getBoundingClientRect();
         this.windowRectWidth = windowRect.width;
         this.draggingOffset = e.pageX - windowRect.left;
+        e.preventDefault();
+      },
+      false
+    );
+    this.window.addEventListener(
+      'touchstart',
+      e => {
+        this.dragTarget = e.currentTarget;
+        let rect = this.legendCanvas.getBoundingClientRect();
+        this.dragLeft = rect.left;
+        this.dragRight = rect.right;
+        this.dragWidth = rect.width;
+
+        const windowRect = this.window.getBoundingClientRect();
+        this.windowRectWidth = windowRect.width;
+        this.draggingOffset = e.changedTouches[0].pageX - windowRect.left;
+        e.preventDefault();
       },
       false
     );
     document.addEventListener('mousemove', this.onMouseMoveBound);
+    document.addEventListener('touchmove', this.onTouchMoveBound);
     document.addEventListener('mouseup', e => {
+      this.dragTarget = null;
+    });
+    document.addEventListener('touchend', e => {
       this.dragTarget = null;
     });
   }
@@ -297,11 +349,10 @@ class Chart {
     }
   }
 
-  animateWindowDelayed() {
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
-      this.animateWindow();
-    }, 200);
+  /** @param {TouchEvent} e */
+  onTouchMove(e) {
+    this.onMouseMoveBound(e.changedTouches[0]);
+    e.preventDefault();
   }
 
   animateWindow() {
@@ -314,20 +365,25 @@ class Chart {
     const deltaMinY = newMinY - this.state.minY;
     const deltaMaxY = newMaxY - this.state.maxY;
     const STEPS_QUANTITY = 10;
+    let prevTimestamp = performance.now();
     this.taskBatches.set(
       AnimationTypes.Drag,
-      new Array(STEPS_QUANTITY).fill(1).map(v => () => {
-        if (steps === STEPS_QUANTITY) {
-          return;
-        }
+      new Array(STEPS_QUANTITY).fill(1).map(v => (timestamp) => {
+        const stepsToAdd = Math.ceil(Math.floor(timestamp - prevTimestamp) / 17);
+        const stepsToAddSafe = stepsToAdd <= 0 ? 1 : stepsToAdd;
+        prevTimestamp = timestamp;
+        console.log('stepsToAdd: ', stepsToAddSafe);
+        steps += stepsToAddSafe;
+
         if (steps < STEPS_QUANTITY - 1) {
-          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY;
-          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY;
-        } else {
-          this.state.minY = newMinY;
-          this.state.maxY = newMaxY;
+          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY * stepsToAddSafe;
+          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY * stepsToAddSafe;
+          return
         }
-        steps++;
+
+        this.state.minY = newMinY;
+        this.state.maxY = newMaxY;
+        this.taskBatches.set(AnimationTypes.Drag, []);
       })
     );
     this.render();
@@ -514,15 +570,19 @@ class Chart {
       return;
     }
     this.renderInProgress = true;
-    requestAnimationFrame(() => {
+    /**
+     * @param {DOMHighResTimeStamp} highResTimestamp
+     * */
+    requestAnimationFrame(highResTimestamp => {
       //console.time('render');
-        this.taskBatches.forEach(batch => {
-          if (batch.length) {
-            batch.pop()();
-          }
-        });
-        this.taskBatches = new Map([...this.taskBatches.entries()].filter(([,batch]) => !!batch.length));
-
+      this.taskBatches.forEach(batch => {
+        if (batch.length) {
+          batch.pop()(highResTimestamp);
+        }
+      });
+      this.taskBatches = new Map(
+        [...this.taskBatches.entries()].filter(([, batch]) => !!batch.length)
+      );
 
       this.context.clearRect(
         0,
