@@ -14,7 +14,7 @@ body {
     text-rendering: optimizelegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    transition: background-color 200ms;
+    transition: background-color 200ms, color 200ms;
     background: white;
 }
 
@@ -60,21 +60,31 @@ main {
     width: 10px;
     background-color: rgba(230, 237, 241, 0.9);
     touch-action: manipulation;
+    transition: background-color 200ms;
+}
+
+.night .grip {
+    background-color: rgba(68, 68, 105, 0.9);
 }
 
 .grip-left {
-    /*cursor: w-resize;*/
+    /*cursor: w-resize*/;
 }
 
 .grip-right {
-    /*cursor: e-resize;*/
+    /*cursor: e-resize*/;
 }
 
 .glass {
     position: absolute;
     top: 0;
     height: 40px;
+    transition: background-color 200ms;
     background-color: rgba(248, 250, 254, 0.9);
+}
+
+.night .glass {
+    background-color: rgba(33, 42, 55, 0.9);
 }
 
 .glass-left {
@@ -92,8 +102,13 @@ main {
     height: 40px;
     border-top: 1px solid rgba(230, 237, 241, 0.9);
     border-bottom: 1px solid rgba(230, 237, 241, 0.9);
-    /*cursor: ew-resize;*/
-    touch-action: manipulation
+    cursor: ew-resize;
+    touch-action: manipulation;
+    transition: border-color 200ms;
+}
+
+.night .window {
+    border-color: rgba(68, 68, 105, 0.9);
 }
 
 .button-cont {
@@ -107,10 +122,18 @@ main {
     margin-right: 10px;
     height: 40px;
     line-height: 40px;
-    border: 1px solid rgb(241,242,244);
+    border: 1px solid rgb(235,239,242);
     border-radius: 20px;
     cursor: pointer;
-    touch-action: manipulation
+    touch-action: manipulation;
+    background: transparent;
+    color: rgb(66,72,75);
+    transition: color 200ms, border-color 200ms;
+}
+
+.night .button {
+    border-color: rgb(52,66,81);
+    color: rgb(233,236,238);
 }
 
 .button .circle {
@@ -125,6 +148,22 @@ main {
     margin-top: -10px;
     font-size: 16px;
     color: white;
+    transition: background-color;
+}
+
+.day-night-switch {
+    border: none;
+    background: transparent;
+    color: rgb(89,154,224);
+    font-size: 22px;
+    transition: color 200ms;
+    cursor: pointer;
+    touch-action: manipulation;
+    margin-bottom: 40px;
+}
+
+.night .day-night-switch {
+    color: rgb(88,167,235);
 }
 
 .credits {

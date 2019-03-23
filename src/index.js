@@ -102,6 +102,7 @@ class Chart {
       this.chartNumber
     ];
     this.window = document.querySelectorAll('.window')[this.chartNumber];
+    this.dayNightSwitch = document.querySelector('.day-night-switch');
 
     this.mainCanvas.style.height = window.getComputedStyle(this.mainCanvas)['width'];
     this.context = this.setupCanvas(this.mainCanvas);
@@ -286,6 +287,9 @@ class Chart {
     document.addEventListener('touchend', e => {
       this.dragTarget = null;
     });
+    this.dayNightSwitch.addEventListener('click', e => {
+      document.documentElement.classList.toggle('dayNightSwitch');
+    })
   }
 
   onMouseMove(e) {
