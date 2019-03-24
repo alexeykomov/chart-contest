@@ -19,9 +19,29 @@ function $$jscomp$arrayFromIterable$$($JSCompiler_temp$jscomp$6_iterable$jscomp$
   }
   return $JSCompiler_temp$jscomp$6_iterable$jscomp$3_iterator$jscomp$inline_9$$;
 }
-var $$jscomp$global$$ = "undefined" != typeof window && window === this ? this : "undefined" != typeof global && null != global ? global : this, $$jscomp$defineProperty$$ = "function" == typeof Object.defineProperties ? Object.defineProperty : function($target$jscomp$84$$, $property$jscomp$4$$, $descriptor$jscomp$1$$) {
-  $target$jscomp$84$$ != Array.prototype && $target$jscomp$84$$ != Object.prototype && ($target$jscomp$84$$[$property$jscomp$4$$] = $descriptor$jscomp$1$$.value);
-};
+var $$jscomp$defineProperty$$ = "function" == typeof Object.defineProperties ? Object.defineProperty : function($target$jscomp$83$$, $property$jscomp$4$$, $descriptor$jscomp$1$$) {
+  $target$jscomp$83$$ != Array.prototype && $target$jscomp$83$$ != Object.prototype && ($target$jscomp$83$$[$property$jscomp$4$$] = $descriptor$jscomp$1$$.value);
+}, $$jscomp$global$$ = "undefined" != typeof window && window === this ? this : "undefined" != typeof global && null != global ? global : this;
+function $$jscomp$polyfill$$($property$jscomp$5_split_target$jscomp$84$$, $impl_polyfill$$) {
+  if ($impl_polyfill$$) {
+    var $obj$jscomp$25$$ = $$jscomp$global$$;
+    $property$jscomp$5_split_target$jscomp$84$$ = $property$jscomp$5_split_target$jscomp$84$$.split(".");
+    for (var $i$jscomp$4_orig$$ = 0; $i$jscomp$4_orig$$ < $property$jscomp$5_split_target$jscomp$84$$.length - 1; $i$jscomp$4_orig$$++) {
+      var $key$jscomp$37$$ = $property$jscomp$5_split_target$jscomp$84$$[$i$jscomp$4_orig$$];
+      $key$jscomp$37$$ in $obj$jscomp$25$$ || ($obj$jscomp$25$$[$key$jscomp$37$$] = {});
+      $obj$jscomp$25$$ = $obj$jscomp$25$$[$key$jscomp$37$$];
+    }
+    $property$jscomp$5_split_target$jscomp$84$$ = $property$jscomp$5_split_target$jscomp$84$$[$property$jscomp$5_split_target$jscomp$84$$.length - 1];
+    $i$jscomp$4_orig$$ = $obj$jscomp$25$$[$property$jscomp$5_split_target$jscomp$84$$];
+    $impl_polyfill$$ = $impl_polyfill$$($i$jscomp$4_orig$$);
+    $impl_polyfill$$ != $i$jscomp$4_orig$$ && null != $impl_polyfill$$ && $$jscomp$defineProperty$$($obj$jscomp$25$$, $property$jscomp$5_split_target$jscomp$84$$, {configurable:!0, writable:!0, value:$impl_polyfill$$});
+  }
+}
+$$jscomp$polyfill$$("Math.log2", function($orig$jscomp$1$$) {
+  return $orig$jscomp$1$$ ? $orig$jscomp$1$$ : function($x$jscomp$83$$) {
+    return Math.log($x$jscomp$83$$) / Math.LN2;
+  };
+});
 function $$jscomp$initSymbol$$() {
   $$jscomp$initSymbol$$ = function $$$jscomp$initSymbol$$$() {
   };
@@ -62,23 +82,8 @@ function $$jscomp$iteratorPrototype$$($iterator$jscomp$7_next$$) {
   };
   return $iterator$jscomp$7_next$$;
 }
-function $$jscomp$owns$$($obj$jscomp$25$$, $prop$jscomp$2$$) {
-  return Object.prototype.hasOwnProperty.call($obj$jscomp$25$$, $prop$jscomp$2$$);
-}
-function $$jscomp$polyfill$$($property$jscomp$5_split_target$jscomp$85$$, $impl_polyfill$$) {
-  if ($impl_polyfill$$) {
-    var $obj$jscomp$26$$ = $$jscomp$global$$;
-    $property$jscomp$5_split_target$jscomp$85$$ = $property$jscomp$5_split_target$jscomp$85$$.split(".");
-    for (var $i$jscomp$4_orig$$ = 0; $i$jscomp$4_orig$$ < $property$jscomp$5_split_target$jscomp$85$$.length - 1; $i$jscomp$4_orig$$++) {
-      var $key$jscomp$38$$ = $property$jscomp$5_split_target$jscomp$85$$[$i$jscomp$4_orig$$];
-      $key$jscomp$38$$ in $obj$jscomp$26$$ || ($obj$jscomp$26$$[$key$jscomp$38$$] = {});
-      $obj$jscomp$26$$ = $obj$jscomp$26$$[$key$jscomp$38$$];
-    }
-    $property$jscomp$5_split_target$jscomp$85$$ = $property$jscomp$5_split_target$jscomp$85$$[$property$jscomp$5_split_target$jscomp$85$$.length - 1];
-    $i$jscomp$4_orig$$ = $obj$jscomp$26$$[$property$jscomp$5_split_target$jscomp$85$$];
-    $impl_polyfill$$ = $impl_polyfill$$($i$jscomp$4_orig$$);
-    $impl_polyfill$$ != $i$jscomp$4_orig$$ && null != $impl_polyfill$$ && $$jscomp$defineProperty$$($obj$jscomp$26$$, $property$jscomp$5_split_target$jscomp$85$$, {configurable:!0, writable:!0, value:$impl_polyfill$$});
-  }
+function $$jscomp$owns$$($obj$jscomp$26$$, $prop$jscomp$2$$) {
+  return Object.prototype.hasOwnProperty.call($obj$jscomp$26$$, $prop$jscomp$2$$);
 }
 $$jscomp$polyfill$$("WeakMap", function($NativeWeakMap$$) {
   function $PolyfillWeakMap$$($iter_opt_iterable$jscomp$4$$) {
@@ -110,13 +115,13 @@ $$jscomp$polyfill$$("WeakMap", function($NativeWeakMap$$) {
       return !1;
     }
     try {
-      var $x$jscomp$83$$ = Object.seal({}), $y$jscomp$68$$ = Object.seal({}), $map$$ = new $NativeWeakMap$$([[$x$jscomp$83$$, 2], [$y$jscomp$68$$, 3]]);
-      if (2 != $map$$.get($x$jscomp$83$$) || 3 != $map$$.get($y$jscomp$68$$)) {
+      var $x$jscomp$84$$ = Object.seal({}), $y$jscomp$68$$ = Object.seal({}), $map$$ = new $NativeWeakMap$$([[$x$jscomp$84$$, 2], [$y$jscomp$68$$, 3]]);
+      if (2 != $map$$.get($x$jscomp$84$$) || 3 != $map$$.get($y$jscomp$68$$)) {
         return !1;
       }
-      $map$$.delete($x$jscomp$83$$);
+      $map$$.delete($x$jscomp$84$$);
       $map$$.set($y$jscomp$68$$, 4);
-      return !$map$$.has($x$jscomp$83$$) && 4 == $map$$.get($y$jscomp$68$$);
+      return !$map$$.has($x$jscomp$84$$) && 4 == $map$$.get($y$jscomp$68$$);
     } catch ($err$jscomp$4$$) {
       return !1;
     }
@@ -263,8 +268,8 @@ $$jscomp$polyfill$$("Map", function($NativeMap$$) {
   var $mapIndex$$ = 0;
   return $PolyfillMap$$;
 });
-$$jscomp$polyfill$$("Array.prototype.fill", function($orig$jscomp$1$$) {
-  return $orig$jscomp$1$$ ? $orig$jscomp$1$$ : function($value$jscomp$88$$, $i$jscomp$5_opt_start$$, $opt_end$jscomp$11$$) {
+$$jscomp$polyfill$$("Array.prototype.fill", function($orig$jscomp$2$$) {
+  return $orig$jscomp$2$$ ? $orig$jscomp$2$$ : function($value$jscomp$88$$, $i$jscomp$5_opt_start$$, $opt_end$jscomp$11$$) {
     var $length$jscomp$16$$ = this.length || 0;
     0 > $i$jscomp$5_opt_start$$ && ($i$jscomp$5_opt_start$$ = Math.max(0, $length$jscomp$16$$ + $i$jscomp$5_opt_start$$));
     if (null == $opt_end$jscomp$11$$ || $opt_end$jscomp$11$$ > $length$jscomp$16$$) {
@@ -439,95 +444,103 @@ function $JSCompiler_StaticMethods_formatDataEntry$$($state$jscomp$1$$, $entry$j
   $state$jscomp$1$$.names = $names$$;
 }
 function $JSCompiler_StaticMethods_createLabelsX$$($JSCompiler_StaticMethods_createLabelsX$self$$) {
-  var $times$$ = $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$mainCanvasWidth$ / (2 * $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$gripWidth$), $labelsX$$ = Array(6 * $times$$).fill(1).map(function($v$jscomp$4$$, $index$jscomp$74$$) {
-    return {x:$JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$minXOrig$ + ($JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$maxXOrig$ - $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$minXOrig$) / (6 * $times$$) * $index$jscomp$74$$, opacity:1, priority:0};
+  var $labelsX$$ = Array(128).fill(1).map(function($v$jscomp$4$$, $index$jscomp$74$$) {
+    return {x:$JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$minXOrig$ + ($JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$maxXOrig$ - $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$minXOrig$) / 128 * $index$jscomp$74$$, opacity:1, priority:0};
   });
   $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.$labelsX$ = $labelsX$$;
+  $JSCompiler_StaticMethods_createLabelsX$self$$.$c$.priority = Math.ceil(Math.log2($labelsX$$.length - 6));
 }
 function $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$$($JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$, $$jscomp$destructuring$var5_left$jscomp$2$$) {
   console.log("formatLabelsXOnDragGrow: ", $$jscomp$destructuring$var5_left$jscomp$2$$);
-  window.drag && ($$jscomp$destructuring$var5_left$jscomp$2$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$minX$, $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$maxX$, function($x$jscomp$85$$) {
-    return $x$jscomp$85$$.x;
-  }), 7 < $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$labelsX$.slice($$jscomp$destructuring$var5_left$jscomp$2$$.$searchStartIndex$, $$jscomp$destructuring$var5_left$jscomp$2$$.$searchEndIndex$ + 1).filter(function($x$jscomp$86$$) {
-    return 1 === $x$jscomp$86$$.opacity;
+  $$jscomp$destructuring$var5_left$jscomp$2$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$minX$, $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$maxX$, function($x$jscomp$86$$) {
+    return $x$jscomp$86$$.x;
+  });
+  6 < $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$labelsX$.slice($$jscomp$destructuring$var5_left$jscomp$2$$.$searchStartIndex$, $$jscomp$destructuring$var5_left$jscomp$2$$.$searchEndIndex$ + 1).filter(function($x$jscomp$87$$) {
+    return 1 === $x$jscomp$87$$.opacity;
   }).length && ($JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.priority++, $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.$labelsX$.filter(function($label$jscomp$5$$) {
     return $label$jscomp$5$$.priority < $JSCompiler_StaticMethods_formatLabelsXOnDragGrow$self$$.$c$.priority;
   }).forEach(function($label$jscomp$6$$) {
     return $label$jscomp$6$$.opacity = 0;
-  })));
+  }));
 }
 function $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$$($JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$) {
   console.log("formatLabelsXOnDragShrink: ", !0);
-  if (window.drag) {
-    var $$jscomp$destructuring$var6_visible$jscomp$1$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$minX$, $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$maxX$, function($x$jscomp$87$$) {
-      return $x$jscomp$87$$.x;
-    }), $searchStartIndex$jscomp$1$$ = $$jscomp$destructuring$var6_visible$jscomp$1$$.$searchStartIndex$;
-    $$jscomp$destructuring$var6_visible$jscomp$1$$ = $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$.slice($searchStartIndex$jscomp$1$$, $$jscomp$destructuring$var6_visible$jscomp$1$$.$searchEndIndex$ + 1).filter(function($x$jscomp$88$$) {
-      return 1 === $x$jscomp$88$$.opacity;
-    });
-    console.log("visible.length: ", $$jscomp$destructuring$var6_visible$jscomp$1$$.length);
-    if (7 > $$jscomp$destructuring$var6_visible$jscomp$1$$.length) {
-      var $lastVisibleIndex$$ = $searchStartIndex$jscomp$1$$;
-      $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$.forEach(function($label$jscomp$7$$, $index$jscomp$75$$) {
-        $index$jscomp$75$$ > $lastVisibleIndex$$ && 1 === $label$jscomp$7$$.opacity && ($JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$[Math.floor(($index$jscomp$75$$ - $lastVisibleIndex$$) / 2)].opacity = 1, $lastVisibleIndex$$ = $index$jscomp$75$$);
-      });
-    } else {
-      console.log("labelsX: ", $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$);
-    }
-  }
+  var $$jscomp$destructuring$var6_visible$jscomp$1$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$minX$, $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$maxX$, function($x$jscomp$88$$) {
+    return $x$jscomp$88$$.x;
+  });
+  $$jscomp$destructuring$var6_visible$jscomp$1$$ = $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$.slice($$jscomp$destructuring$var6_visible$jscomp$1$$.$searchStartIndex$, $$jscomp$destructuring$var6_visible$jscomp$1$$.$searchEndIndex$ + 1).filter(function($x$jscomp$89$$) {
+    return 1 === $x$jscomp$89$$.opacity;
+  });
+  console.log("visible.length: ", $$jscomp$destructuring$var6_visible$jscomp$1$$.length);
+  6 > $$jscomp$destructuring$var6_visible$jscomp$1$$.length && ($JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.priority--, $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$.filter(function($label$jscomp$7$$) {
+    return $label$jscomp$7$$.priority > $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.priority;
+  }).forEach(function($label$jscomp$8$$) {
+    return $label$jscomp$8$$.opacity = 1;
+  }));
+  console.log("labelsX: ", $JSCompiler_StaticMethods_formatLabelsXOnDragShrink$self$$.$c$.$labelsX$);
+}
+function $JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$$($JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$) {
+  var $$jscomp$destructuring$var7$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$.$c$.$minX$, $JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$.$c$.$maxX$, function($x$jscomp$90$$) {
+    return $x$jscomp$90$$.x;
+  }), $maximalPriority$jscomp$1$$ = Math.ceil(Math.log2($JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$.$c$.$labelsX$.length - 6));
+  $JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$self$$.$c$.$labelsX$.slice($$jscomp$destructuring$var7$$.$searchStartIndex$, $$jscomp$destructuring$var7$$.$searchEndIndex$ + 1).filter(function($x$jscomp$91$$) {
+    return $x$jscomp$91$$.priority < $maximalPriority$jscomp$1$$;
+  }).forEach(function($label$jscomp$9$$) {
+    return $label$jscomp$9$$.opacity = 0;
+  });
 }
 function $JSCompiler_StaticMethods_findExtremums$$($state$jscomp$6$$) {
-  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$6$$.lines, $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$$, $index$jscomp$78$$) {
-    return $state$jscomp$6$$.enabled[$index$jscomp$78$$];
+  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$6$$.lines, $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$$, $index$jscomp$76$$) {
+    return $state$jscomp$6$$.enabled[$index$jscomp$76$$];
   }).reduce(function($max$$, $line$jscomp$1$$) {
     return Math.max($max$$, Math.max.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$1$$)));
   }, -Infinity);
-  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$jscomp$2$$, $index$jscomp$79$$) {
-    return $state$jscomp$6$$.enabled[$index$jscomp$79$$];
+  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(function($line$jscomp$2$$, $index$jscomp$77$$) {
+    return $state$jscomp$6$$.enabled[$index$jscomp$77$$];
   }).reduce(function($max$jscomp$1$$, $line$jscomp$3$$) {
     return Math.min($max$jscomp$1$$, Math.min.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$3$$)));
   }, Infinity);
   return {$minX$:$minX$jscomp$1$$, $maxX$:$maxX$jscomp$1$$, $maxY$:$maxY$jscomp$2$$, $minY$:$lines$jscomp$1_minY$jscomp$2$$};
 }
-function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$7$$, $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$) {
+function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$7$$, $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$) {
   var $lines$jscomp$2_minY$jscomp$3$$ = $state$jscomp$7$$.lines;
-  $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($lines$jscomp$2_minY$jscomp$3$$[0], $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$);
-  var $searchStartIndex$jscomp$2$$ = $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$.$searchStartIndex$, $searchEndIndex$jscomp$2$$ = $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$.$searchEndIndex$;
-  $$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$4$$, $index$jscomp$80$$) {
-    return $state$jscomp$7$$.enabled[$index$jscomp$80$$];
+  $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$ = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($lines$jscomp$2_minY$jscomp$3$$[0], $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$);
+  var $searchStartIndex$jscomp$3$$ = $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$.$searchStartIndex$, $searchEndIndex$jscomp$3$$ = $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$.$searchEndIndex$;
+  $$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$4$$, $index$jscomp$78$$) {
+    return $state$jscomp$7$$.enabled[$index$jscomp$78$$];
   }).reduce(function($max$jscomp$2$$, $line$jscomp$5$$) {
-    return Math.max($max$jscomp$2$$, Math.max.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$5$$.slice($searchStartIndex$jscomp$2$$, $searchEndIndex$jscomp$2$$ + 1))));
+    return Math.max($max$jscomp$2$$, Math.max.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$5$$.slice($searchStartIndex$jscomp$3$$, $searchEndIndex$jscomp$3$$ + 1))));
   }, -Infinity);
-  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$6$$, $index$jscomp$81$$) {
-    return $state$jscomp$7$$.enabled[$index$jscomp$81$$];
+  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(function($line$jscomp$6$$, $index$jscomp$79$$) {
+    return $state$jscomp$7$$.enabled[$index$jscomp$79$$];
   }).reduce(function($max$jscomp$3$$, $line$jscomp$7$$) {
-    return Math.min($max$jscomp$3$$, Math.min.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$7$$.slice($searchStartIndex$jscomp$2$$, $searchEndIndex$jscomp$2$$ + 1))));
+    return Math.min($max$jscomp$3$$, Math.min.apply(Math, $$jscomp$arrayFromIterable$$($line$jscomp$7$$.slice($searchStartIndex$jscomp$3$$, $searchEndIndex$jscomp$3$$ + 1))));
   }, Infinity);
-  return {$maxY$:$$jscomp$destructuring$var7_maxY$jscomp$3_minX$jscomp$2$$, $minY$:$lines$jscomp$2_minY$jscomp$3$$};
+  return {$maxY$:$$jscomp$destructuring$var8_maxY$jscomp$3_minX$jscomp$2$$, $minY$:$lines$jscomp$2_minY$jscomp$3$$};
 }
-function $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($xs$jscomp$1$$, $minX$jscomp$3_searchEndIndex$jscomp$3$$, $maxX$jscomp$3$$, $extract$$) {
-  $extract$$ = void 0 === $extract$$ ? function($x$jscomp$91$$) {
-    return $x$jscomp$91$$;
+function $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($xs$jscomp$1$$, $minX$jscomp$3_searchEndIndex$jscomp$4$$, $maxX$jscomp$3$$, $extract$$) {
+  $extract$$ = void 0 === $extract$$ ? function($x$jscomp$93$$) {
+    return $x$jscomp$93$$;
   } : $extract$$;
-  for (var $searchStartIndex$jscomp$3$$ = 0, $counter$5_counter$jscomp$3$$ = 0; $counter$5_counter$jscomp$3$$ < $xs$jscomp$1$$.length; $counter$5_counter$jscomp$3$$++) {
-    if ($extract$$($xs$jscomp$1$$[$counter$5_counter$jscomp$3$$]) >= $minX$jscomp$3_searchEndIndex$jscomp$3$$ && 0 <= $counter$5_counter$jscomp$3$$ - 1) {
-      $searchStartIndex$jscomp$3$$ = $counter$5_counter$jscomp$3$$ - 1;
+  for (var $searchStartIndex$jscomp$4$$ = 0, $counter$5_counter$jscomp$2$$ = 0; $counter$5_counter$jscomp$2$$ < $xs$jscomp$1$$.length; $counter$5_counter$jscomp$2$$++) {
+    if ($extract$$($xs$jscomp$1$$[$counter$5_counter$jscomp$2$$]) >= $minX$jscomp$3_searchEndIndex$jscomp$4$$ && 0 <= $counter$5_counter$jscomp$2$$ - 1) {
+      $searchStartIndex$jscomp$4$$ = $counter$5_counter$jscomp$2$$ - 1;
       break;
     }
   }
-  $minX$jscomp$3_searchEndIndex$jscomp$3$$ = $xs$jscomp$1$$.length - 1;
-  for ($counter$5_counter$jscomp$3$$ = $xs$jscomp$1$$.length - 1; 0 <= $counter$5_counter$jscomp$3$$; $counter$5_counter$jscomp$3$$--) {
-    if ($extract$$($xs$jscomp$1$$[$counter$5_counter$jscomp$3$$]) <= $maxX$jscomp$3$$ && $counter$5_counter$jscomp$3$$ + 1 < $xs$jscomp$1$$.length) {
-      $minX$jscomp$3_searchEndIndex$jscomp$3$$ = $counter$5_counter$jscomp$3$$ + 1;
+  $minX$jscomp$3_searchEndIndex$jscomp$4$$ = $xs$jscomp$1$$.length - 1;
+  for ($counter$5_counter$jscomp$2$$ = $xs$jscomp$1$$.length - 1; 0 <= $counter$5_counter$jscomp$2$$; $counter$5_counter$jscomp$2$$--) {
+    if ($extract$$($xs$jscomp$1$$[$counter$5_counter$jscomp$2$$]) <= $maxX$jscomp$3$$ && $counter$5_counter$jscomp$2$$ + 1 < $xs$jscomp$1$$.length) {
+      $minX$jscomp$3_searchEndIndex$jscomp$4$$ = $counter$5_counter$jscomp$2$$ + 1;
       break;
     }
   }
-  return {$searchStartIndex$:$searchStartIndex$jscomp$3$$, $searchEndIndex$:$minX$jscomp$3_searchEndIndex$jscomp$3$$};
+  return {$searchStartIndex$:$searchStartIndex$jscomp$4$$, $searchEndIndex$:$minX$jscomp$3_searchEndIndex$jscomp$4$$};
 }
 function $JSCompiler_StaticMethods_normalizeEntry$$($state$jscomp$8$$, $screenMinY$$, $canvasWidth$$, $canvasHeight$$, $useOrig$$) {
   var $minX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$minXOrig$ : $state$jscomp$8$$.$minX$, $maxX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$maxXOrig$ : $state$jscomp$8$$.$maxX$, $maxY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$maxYOrig$ : $state$jscomp$8$$.$maxY$, $minY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$minYOrig$ : $state$jscomp$8$$.$minY$;
-  return $state$jscomp$8$$.lines.map(function($line$jscomp$8$$, $index$jscomp$82$$) {
-    return 0 === $index$jscomp$82$$ ? $line$jscomp$8$$.map(function($v$jscomp$5$$) {
+  return $state$jscomp$8$$.lines.map(function($line$jscomp$8$$, $index$jscomp$80$$) {
+    return 0 === $index$jscomp$80$$ ? $line$jscomp$8$$.map(function($v$jscomp$5$$) {
       return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$5$$, $minX$jscomp$4$$, $maxX$jscomp$4$$, 0, $canvasWidth$$, !1);
     }) : $line$jscomp$8$$.map(function($v$jscomp$6$$) {
       return $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$6$$, $minY$jscomp$4$$, $maxY$jscomp$4$$, $screenMinY$$, $canvasHeight$$, !0);
@@ -544,10 +557,10 @@ function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$sel
       $JSCompiler_StaticMethods_render$self$$.$l$.forEach(function($batch$$) {
         $batch$$.length && $batch$$.pop()($highResTimestamp$$);
       });
-      $JSCompiler_StaticMethods_render$self$$.$l$ = new Map([].concat($$jscomp$arrayFromIterable$$($JSCompiler_StaticMethods_render$self$$.$l$.entries())).filter(function($$jscomp$destructuring$var8_$jscomp$destructuring$var9$$) {
-        $$jscomp$destructuring$var8_$jscomp$destructuring$var9$$ = $$jscomp$makeIterator$$($$jscomp$destructuring$var8_$jscomp$destructuring$var9$$);
-        $$jscomp$destructuring$var8_$jscomp$destructuring$var9$$.next();
-        return !!$$jscomp$destructuring$var8_$jscomp$destructuring$var9$$.next().value.length;
+      $JSCompiler_StaticMethods_render$self$$.$l$ = new Map([].concat($$jscomp$arrayFromIterable$$($JSCompiler_StaticMethods_render$self$$.$l$.entries())).filter(function($$jscomp$destructuring$var10_$jscomp$destructuring$var9$$) {
+        $$jscomp$destructuring$var10_$jscomp$destructuring$var9$$ = $$jscomp$makeIterator$$($$jscomp$destructuring$var10_$jscomp$destructuring$var9$$);
+        $$jscomp$destructuring$var10_$jscomp$destructuring$var9$$.next();
+        return !!$$jscomp$destructuring$var10_$jscomp$destructuring$var9$$.next().value.length;
       }));
       $JSCompiler_StaticMethods_render$self$$.$w$.clearRect(0, 0, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasWidth$, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasHeight$);
       var $normalizedLinesLegend_normalizedLinesMain$$ = $JSCompiler_StaticMethods_normalizeEntry$$($JSCompiler_StaticMethods_render$self$$.$c$, 30, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasWidth$, $JSCompiler_StaticMethods_render$self$$.$c$.$mainCanvasHeight$, !1);
@@ -562,14 +575,14 @@ function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$sel
   }
 }
 function $JSCompiler_StaticMethods_renderWindow$$($JSCompiler_StaticMethods_renderWindow$self$$) {
-  var $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$ = $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_renderWindow$self$$, $JSCompiler_StaticMethods_renderWindow$self$$.$c$), $gripLeftPos$jscomp$1$$ = $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$.$gripLeftPos$;
-  $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$ = $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$.$gripRightPos$;
-  var $glassRightPos$$ = $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$;
+  var $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$ = $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_renderWindow$self$$, $JSCompiler_StaticMethods_renderWindow$self$$.$c$), $gripLeftPos$jscomp$1$$ = $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$.$gripLeftPos$;
+  $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$ = $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$.$gripRightPos$;
+  var $glassRightPos$$ = $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$;
   $JSCompiler_StaticMethods_renderWindow$self$$.$o$.style = "left:" + $gripLeftPos$jscomp$1$$ + "px";
-  $JSCompiler_StaticMethods_renderWindow$self$$.$v$.style = "left:" + $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$ + "px";
+  $JSCompiler_StaticMethods_renderWindow$self$$.$v$.style = "left:" + $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$ + "px";
   $JSCompiler_StaticMethods_renderWindow$self$$.$H$.style = "width:" + $gripLeftPos$jscomp$1$$ + "px";
   $JSCompiler_StaticMethods_renderWindow$self$$.$I$.style = "left:" + $glassRightPos$$ + "px;";
-  $JSCompiler_StaticMethods_renderWindow$self$$.window.style = "left:" + ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$) + "px;width:" + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$ + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - $$jscomp$destructuring$var10_gripRightPos$jscomp$1$$))) + "px";
+  $JSCompiler_StaticMethods_renderWindow$self$$.window.style = "left:" + ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$) + "px;width:" + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - ($gripLeftPos$jscomp$1$$ + $JSCompiler_StaticMethods_renderWindow$self$$.$c$.$gripWidth$ + ($JSCompiler_StaticMethods_renderWindow$self$$.$c$.$legendWidth$ - $$jscomp$destructuring$var11_gripRightPos$jscomp$1$$))) + "px";
 }
 function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_calculateGripPos$self$$, $state$jscomp$10$$) {
   var $gripRightPos$jscomp$2$$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$10$$.$maxX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, 0, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1) - $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$gripWidth$;
@@ -578,9 +591,9 @@ function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_
   return $state$jscomp$10$$;
 }
 function $JSCompiler_StaticMethods_renderLines$$($JSCompiler_StaticMethods_renderLines$self$$, $context$jscomp$1$$, $lines$jscomp$4$$, $lineWidth$$) {
-  for (var $linesNumber$$ = $lines$jscomp$4$$.length, $counter$jscomp$4$$ = 1; $counter$jscomp$4$$ < $linesNumber$$; $counter$jscomp$4$$++) {
-    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$4$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$4$$].forEach(function($y$jscomp$69$$, $index$jscomp$83$$) {
-      $context$jscomp$1$$.lineTo($lines$jscomp$4$$[0][$index$jscomp$83$$], $y$jscomp$69$$);
+  for (var $linesNumber$$ = $lines$jscomp$4$$.length, $counter$jscomp$3$$ = 1; $counter$jscomp$3$$ < $linesNumber$$; $counter$jscomp$3$$++) {
+    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$3$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$3$$].forEach(function($y$jscomp$69$$, $index$jscomp$81$$) {
+      $context$jscomp$1$$.lineTo($lines$jscomp$4$$[0][$index$jscomp$81$$], $y$jscomp$69$$);
     }), $context$jscomp$1$$.stroke();
   }
 }
@@ -597,8 +610,8 @@ function $JSCompiler_StaticMethods_checkRender$$($JSCompiler_StaticMethods_check
     return !!$v$jscomp$8$$.length;
   });
 }
-Array($data$$module$src$data$$.length).fill(1).forEach(function($value$jscomp$91$$, $counter$jscomp$5$$) {
-  var $chart$$ = new $Chart$$module$src$index$$($counter$jscomp$5$$);
+Array(1).fill(1).forEach(function($value$jscomp$91$$, $counter$jscomp$4$$) {
+  var $chart$$ = new $Chart$$module$src$index$$($counter$jscomp$4$$);
   window.addEventListener("DOMContentLoaded", function() {
     $chart$$.$u$ = document.querySelectorAll(".main-canvas")[$chart$$.$h$];
     $chart$$.$s$ = document.querySelectorAll(".legend-canvas")[$chart$$.$h$];
@@ -630,25 +643,27 @@ Array($data$$module$src$data$$.length).fill(1).forEach(function($value$jscomp$91
     document.addEventListener("touchend", $chart$$.$M$);
     $chart$$.$C$.addEventListener("click", $chart$$.$S$);
     $JSCompiler_StaticMethods_createLabelsX$$($chart$$);
-    for (var $prioritiesSetCounter$jscomp$inline_33$$ = 0, $currentPriority$jscomp$inline_34$$ = 0, $labelsX$jscomp$inline_35$$ = $chart$$.$c$.$labelsX$, $counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$ = Math.floor($labelsX$jscomp$inline_35$$.length / 6), $counter$jscomp$inline_37_which$jscomp$inline_39$$ = 0; $counter$jscomp$inline_37_which$jscomp$inline_39$$ < $labelsX$jscomp$inline_35$$.length;) {
-      $labelsX$jscomp$inline_35$$[$counter$jscomp$inline_37_which$jscomp$inline_39$$].priority = Infinity, $prioritiesSetCounter$jscomp$inline_33$$++, $counter$jscomp$inline_37_which$jscomp$inline_39$$ += $counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$;
+    for (var $prioritiesSetCounter$jscomp$inline_33$$ = 0, $currentPriority$jscomp$inline_34$$ = 0, $labelsX$jscomp$inline_35$$ = $chart$$.$c$.$labelsX$, $maximalPriority$jscomp$inline_36$$ = Math.ceil(Math.log2($labelsX$jscomp$inline_35$$.length - 6)), $counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$ = Math.floor($labelsX$jscomp$inline_35$$.length / 6), $counter$jscomp$inline_38_which$jscomp$inline_40$$ = 0; $counter$jscomp$inline_38_which$jscomp$inline_40$$ < $labelsX$jscomp$inline_35$$.length;) {
+      $labelsX$jscomp$inline_35$$[$counter$jscomp$inline_38_which$jscomp$inline_40$$].priority = $maximalPriority$jscomp$inline_36$$, $prioritiesSetCounter$jscomp$inline_33$$++, $counter$jscomp$inline_38_which$jscomp$inline_40$$ += $counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$;
     }
     $labelsX$jscomp$inline_35$$[$labelsX$jscomp$inline_35$$.length - 1].priority = 0;
     $prioritiesSetCounter$jscomp$inline_33$$++;
-    for ($currentPriority$jscomp$inline_34$$++; 8 > $currentPriority$jscomp$inline_34$$;) {
-      for ($counter$jscomp$inline_37_which$jscomp$inline_39$$ = $counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$ = 0; $counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$ < $labelsX$jscomp$inline_35$$.length;) {
-        1 === $currentPriority$jscomp$inline_34$$ - $labelsX$jscomp$inline_35$$[$counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$].priority && ($counter$jscomp$inline_37_which$jscomp$inline_39$$++, 2 === $counter$jscomp$inline_37_which$jscomp$inline_39$$ ? ($labelsX$jscomp$inline_35$$[$counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$].priority = $currentPriority$jscomp$inline_34$$, $prioritiesSetCounter$jscomp$inline_33$$++, $counter$jscomp$inline_37_which$jscomp$inline_39$$ = 
-        0) : $prioritiesSetCounter$jscomp$inline_33$$--), $counter$4$jscomp$inline_38_mainPointsStep$jscomp$inline_36$$++;
+    for ($currentPriority$jscomp$inline_34$$++; $currentPriority$jscomp$inline_34$$ < $maximalPriority$jscomp$inline_36$$;) {
+      for ($counter$jscomp$inline_38_which$jscomp$inline_40$$ = $counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$ = 0; $counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$ < $labelsX$jscomp$inline_35$$.length;) {
+        1 === $currentPriority$jscomp$inline_34$$ - $labelsX$jscomp$inline_35$$[$counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$].priority && ($counter$jscomp$inline_38_which$jscomp$inline_40$$++, 2 === $counter$jscomp$inline_38_which$jscomp$inline_40$$ ? ($labelsX$jscomp$inline_35$$[$counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$].priority = $currentPriority$jscomp$inline_34$$, $prioritiesSetCounter$jscomp$inline_33$$++, $counter$jscomp$inline_38_which$jscomp$inline_40$$ = 
+        0) : $prioritiesSetCounter$jscomp$inline_33$$--), $counter$4$jscomp$inline_39_mainPointsStep$jscomp$inline_37$$++;
       }
       $currentPriority$jscomp$inline_34$$++;
     }
+    console.log("labelsX: ", $labelsX$jscomp$inline_35$$);
+    $JSCompiler_StaticMethods_makeVisibleBasedOnZoomLevel$$($chart$$);
     $JSCompiler_StaticMethods_render$$($chart$$);
   }, !1);
   window.addEventListener("unload", function() {
   }, !1);
 });
-function $serializeColor$$module$src$index$$($$jscomp$destructuring$var11$$) {
-  return "rgba(" + $$jscomp$destructuring$var11$$.r + "," + $$jscomp$destructuring$var11$$.$g$ + "," + $$jscomp$destructuring$var11$$.$b$ + "," + $$jscomp$destructuring$var11$$.$a$ + ")";
+function $serializeColor$$module$src$index$$($$jscomp$destructuring$var12$$) {
+  return "rgba(" + $$jscomp$destructuring$var12$$.r + "," + $$jscomp$destructuring$var12$$.$g$ + "," + $$jscomp$destructuring$var12$$.$b$ + "," + $$jscomp$destructuring$var12$$.$a$ + ")";
 }
 var $AnimationTypes$$module$src$index$Toggle$$ = "Toggle", $AnimationTypes$$module$src$index$Drag$$ = "Drag";
 })();

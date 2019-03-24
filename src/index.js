@@ -8,7 +8,7 @@
  */
 
 import { data, DataEntry } from './data.js';
-import { TEXT_WIDTH } from './constants.js';
+import { TEXT_WIDTH, HOW_MANY_LABELS_IN_WINDOW } from './constants.js';
 
 const PriorityColor = {
   0: 'red',
@@ -151,6 +151,8 @@ class Chart {
 
     this.createLabelsX(this.state);
     this.setLabelPriorities();
+    this.makeVisibleBasedOnZoomLevel();
+
     this.render();
   }
 
@@ -506,31 +508,36 @@ class Chart {
   createLabelsX(state) {
     const times = this.state.mainCanvasWidth / (2 * this.state.gripWidth);
 
-    const howManyLabelsInWindow = 6;
+    const howManyLabelsInWindow = HOW_MANY_LABELS_IN_WINDOW;
     /*const initialX = this.denormalizeValue(TEXT_WIDTH / 2, this.state.minXOrig, this.state.maxXOrig, 0, this.state.mainCanvasWidth);*/
-    const labelsX = new Array(howManyLabelsInWindow * times)
-      .fill(1)
-      .map((v, index) => {
-        const scale = this.state.maxXOrig - this.state.minXOrig;
-        const x = this.state.minXOrig + index * (scale / (6 * times));
-        return {
-          x: x,
-          opacity: 1,
-          priority: 0,
-        };
-      });
+    const labelXEmpty = new Array(128).fill(1);
+    const labelsX = labelXEmpty.map((v, index) => {
+      const scale = this.state.maxXOrig - this.state.minXOrig;
+      const x = this.state.minXOrig + index * (scale / (128));
+      return {
+        x: x,
+        opacity: 1,
+        priority: 0,
+      };
+    });
     this.state.labelsX = labelsX;
+    this.state.priority = getMaximalPriority(
+      labelsX.length - HOW_MANY_LABELS_IN_WINDOW
+    );
   }
 
   setLabelPriorities() {
     let prioritiesSetCounter = 0;
     let currentPriority = 0;
-
     const labelsX = this.state.labelsX;
+
+    const maximalPriority = getMaximalPriority(
+      labelsX.length - HOW_MANY_LABELS_IN_WINDOW
+    );
     const mainPointsStep = Math.floor(labelsX.length / 6);
     let counter = 0;
     while (counter < labelsX.length) {
-      labelsX[counter].priority = Infinity;
+      labelsX[counter].priority = maximalPriority;
       prioritiesSetCounter++;
       counter += mainPointsStep;
     }
@@ -538,7 +545,7 @@ class Chart {
     prioritiesSetCounter++;
     currentPriority++;
 
-    while (currentPriority < 8) {
+    while (currentPriority < maximalPriority) {
       let counter = 0;
       let which = 0;
       while (counter < labelsX.length) {
@@ -556,16 +563,13 @@ class Chart {
       }
       currentPriority++;
     }
+
+    console.log('labelsX: ', labelsX);
   }
 
   /** @param {State} state */
   formatLabelsXOnDragGrow(state, left) {
     console.log('formatLabelsXOnDragGrow: ', left);
-    if (!window['drag']) {
-      return;
-    }
-
-    const howManyLabelsInWindowDefault = 7;
     const {
       searchStartIndex,
       searchEndIndex,
@@ -579,44 +583,17 @@ class Chart {
       .slice(searchStartIndex, searchEndIndex + 1)
       .filter(x => x.opacity === 1);
     const howManyLabelsInWindow = visible.length;
-    if (howManyLabelsInWindow > howManyLabelsInWindowDefault) {
+    if (howManyLabelsInWindow > HOW_MANY_LABELS_IN_WINDOW) {
       this.state.priority++;
       this.state.labelsX
         .filter(label => label.priority < this.state.priority)
         .forEach(label => (label.opacity = 0));
-
-      /*if (left) {
-        this.state.labelsX
-          .slice(0, searchEndIndex + 1)
-          .filter(x => x.opacity === 1)
-          .reverse()
-          .forEach((label, index) => {
-            if (index % 2 !== 0) {
-              label.opacity = 0;
-            }
-          });
-        return;
-      }
-
-      this.state.labelsX
-        .slice(searchStartIndex, this.state.labelsX.length)
-        .filter(x => x.opacity === 1)
-        .forEach((label, index) => {
-          if (index % 2 !== 0) {
-            label.opacity = 0;
-          }
-        });*/
     }
   }
 
   /** @param {State} state */
   formatLabelsXOnDragShrink(state, left) {
     console.log('formatLabelsXOnDragShrink: ', left);
-    if (!window['drag']) {
-      return;
-    }
-
-    const howManyLabelsInWindowDefault = 7;
     const {
       searchStartIndex,
       searchEndIndex,
@@ -631,50 +608,47 @@ class Chart {
       .filter(x => x.opacity === 1);
     console.log('visible.length: ', visible.length);
     const howManyLabelsInWindow = visible.length;
-    if (howManyLabelsInWindow < howManyLabelsInWindowDefault) {
-      if (left) {
-        let lastVisibleIndex = searchStartIndex;
-        this.state.labelsX.forEach((label, index) => {
-          if (index > lastVisibleIndex && label.opacity === 1) {
-            const midIndex = Math.floor((index - lastVisibleIndex) / 2);
-            this.state.labelsX[midIndex].opacity = 1;
-            lastVisibleIndex = index;
-          }
-        });
-        return;
-      }
-
+    if (howManyLabelsInWindow < HOW_MANY_LABELS_IN_WINDOW) {
+      this.state.priority--;
       this.state.labelsX
-        .slice(searchStartIndex, this.state.labelsX.length)
-        .filter(x => x.opacity === 1)
-        .forEach((label, index) => {
-          if (index % 2 !== 0) {
-            label.opacity = 0;
-          }
-        });
+        .filter(label => label.priority > this.state.priority)
+        .forEach(label => (label.opacity = 1));
     }
     console.log('labelsX: ', this.state.labelsX);
   }
 
   makeVisibleBasedOnZoomLevel() {
-    const zoom =
-      (this.state.maxX - this.state.minX) /
-      (this.state.maxXOrig - this.state.minXOrig);
-    console.log('zoom: ', zoom);
-    const zoneLength = Math.floor((zoom * this.state.labelsX.length) / 6);
-    console.log('zoneLength: ', zoneLength);
-    let zoneCounter = 0;
-    for (let counter = 0; counter < this.state.labelsX.length; counter++) {
-      if (zoneCounter === zoneLength) {
-        zoneCounter = 0;
-      }
-      if (zoneCounter === 0) {
-        this.state.labelsX[counter].opacity = 1;
-      } else {
-        this.state.labelsX[counter].opacity = 0;
-      }
-      zoneCounter++;
-    }
+    const {
+      searchStartIndex,
+      searchEndIndex,
+    } = this.findSearchIndexesInInterval(
+      this.state.labelsX,
+      this.state.minX,
+      this.state.maxX,
+      x => x.x
+    );
+    const maximalPriority = getMaximalPriority(
+      this.state.labelsX.length - HOW_MANY_LABELS_IN_WINDOW
+    );
+
+    this.state.labelsX
+      .slice(searchStartIndex, searchEndIndex + 1)
+      .filter(x => x.priority < maximalPriority)
+      .forEach(label => (label.opacity = 0));
+  }
+
+  resizeLabels() {
+    const {
+      searchStartIndex,
+      searchEndIndex,
+    } = this.findSearchIndexesInInterval(
+        this.state.labelsX,
+        this.state.minX,
+        this.state.maxX,
+        x => x.x
+    );
+
+    const lastResizeWidth =  this.state.maxX - this.state.minX;
   }
 
   /**
@@ -1028,7 +1002,7 @@ class Chart {
   }
 }
 
-new Array(data.length).fill(1).forEach((value, counter) => {
+new Array(1).fill(1).forEach((value, counter) => {
   const chart = new Chart(counter);
   window.addEventListener('DOMContentLoaded', () => chart.onLoad(), false);
   window.addEventListener('unload', () => chart.onUnLoad(), false);
