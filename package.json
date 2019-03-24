@@ -1,5 +1,5 @@
 {
-  "name": "react-compact",
+  "name": "chart-contest",
   "version": "0.0.1",
   "description": "Chart contest",
   "main": "",
@@ -13,9 +13,11 @@
     "compile-prod": "java -jar bin/closure-compiler-v20190301.jar --js=src/**.js --js_output_file='target/output-compiled-ui.js' --charset=utf-8 --compilation_level=ADVANCED_OPTIMIZATIONS --summary_detail_level=3 --warning_level=VERBOSE --source_map_format=V3 --language_in=ECMASCRIPT6 --language_out=ECMASCRIPT5 --output_wrapper=';(function(){%output%})();' --define='DEBUG=false'"
   },
   "keywords": [
-    "pythagoras",
-    "tree",
-    "fractal"
+    "Telegram",
+    "chart",
+    "contest",
+    "visual",
+    "library"
   ],
   "author": [
     "alexeykcontact@gmail.com (Alex K)"
