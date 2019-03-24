@@ -179,7 +179,6 @@ class Chart {
     const deltaMaxY = newMaxY - maxY;
     const STEPS_QUANTITY = 10;
     const deltaOpacity = (enabling ? +1 : -1) / STEPS_QUANTITY;
-    console.log('start timestamp: ', performance.now());
     let prevTimestamp = performance.now();
     this.taskBatches.set(
       AnimationTypes.Toggle,
@@ -187,7 +186,6 @@ class Chart {
         const stepsToAdd =
           Math.ceil(Math.floor(timestamp - prevTimestamp) / 17) || 1;
         prevTimestamp = timestamp;
-        console.log('stepsToAdd: ', stepsToAdd);
         steps += stepsToAdd;
 
         if (steps < STEPS_QUANTITY) {
@@ -399,7 +397,6 @@ class Chart {
         );
         const stepsToAddSafe = stepsToAdd <= 0 ? 1 : stepsToAdd;
         prevTimestamp = timestamp;
-        console.log('stepsToAdd: ', stepsToAddSafe);
         steps += stepsToAddSafe;
 
         if (steps < STEPS_QUANTITY - 1) {
@@ -656,8 +653,6 @@ class Chart {
 
   renderButtons(state) {
     state.enabled.forEach((enabled, index) => {
-      console.log('enabled: ', enabled);
-      console.log('index: ', index);
       const button = this.buttons[index];
       const circle = button.querySelector('span');
       if (enabled) {
