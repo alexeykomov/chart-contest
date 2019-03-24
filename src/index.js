@@ -8,7 +8,13 @@
  */
 
 import { data, DataEntry } from './data.js';
-import { TEXT_WIDTH, HOW_MANY_LABELS_IN_WINDOW } from './constants.js';
+import {
+  TEXT_WIDTH,
+  HOW_MANY_LABELS_IN_WINDOW,
+  COMFORT_TEXT_SPACING,
+  MINIMAL_TEXT_SPACING,
+} from './constants.js';
+import { binaryInsert } from './utils.js';
 
 const PriorityColor = {
   0: 'red',
@@ -104,6 +110,9 @@ class Chart {
       nightMode: false,
       labelsX: [],
       priority: 0,
+      lastResizeWidth: 0,
+      prevWidth: 0,
+      resizeCounter: 1,
     };
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
@@ -150,8 +159,8 @@ class Chart {
     this.attachEvents();
 
     this.createLabelsX(this.state);
-    this.setLabelPriorities();
-    this.makeVisibleBasedOnZoomLevel();
+    //this.setLabelPriorities();
+    //this.makeVisibleBasedOnZoomLevel();
 
     this.render();
   }
@@ -333,14 +342,7 @@ class Chart {
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
 
-      console.log('e.pageX: ', e.pageX);
-      console.log('this.lastPageX: ', this.lastPageX);
-      if (e.pageX < this.lastPageX) {
-        this.formatLabelsXOnDragGrow(this.state, true);
-      }
-      if (e.pageX > this.lastPageX) {
-        this.formatLabelsXOnDragShrink(this.state, true);
-      }
+      this.resizeLabels();
       this.lastPageX = e.pageX;
       this.animateWindow();
       return;
@@ -357,12 +359,7 @@ class Chart {
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
-      if (e.pageX < this.lastPageX) {
-        this.formatLabelsXOnDragShrink(this.state, true);
-      }
-      if (e.pageX > this.lastPageX) {
-        this.formatLabelsXOnDragGrow(this.state, false);
-      }
+      this.resizeLabels();
       this.lastPageX = e.pageX;
       this.animateWindow();
       return;
@@ -510,20 +507,23 @@ class Chart {
 
     const howManyLabelsInWindow = HOW_MANY_LABELS_IN_WINDOW;
     /*const initialX = this.denormalizeValue(TEXT_WIDTH / 2, this.state.minXOrig, this.state.maxXOrig, 0, this.state.mainCanvasWidth);*/
-    const labelXEmpty = new Array(128).fill(1);
-    const labelsX = labelXEmpty.map((v, index) => {
-      const scale = this.state.maxXOrig - this.state.minXOrig;
-      const x = this.state.minXOrig + index * (scale / (128));
-      return {
-        x: x,
-        opacity: 1,
-        priority: 0,
-      };
-    });
+    const scale = this.state.maxXOrig - this.state.minXOrig;
+    const labelXEmpty = new Array(HOW_MANY_LABELS_IN_WINDOW - 1).fill(1);
+    const labelsX = labelXEmpty
+      .map((v, index) => {
+        const x =
+          this.state.minXOrig +
+          index * (scale / (HOW_MANY_LABELS_IN_WINDOW - 1));
+        return {
+          x: x,
+          opacity: 1,
+          priority: 0,
+        };
+      })
+      .concat([{ x: this.state.maxXOrig, opacity: 1, priority: 0 }]);
     this.state.labelsX = labelsX;
-    this.state.priority = getMaximalPriority(
-      labelsX.length - HOW_MANY_LABELS_IN_WINDOW
-    );
+    this.state.lastResizeWidth = scale;
+    this.state.prevWidth = scale;
   }
 
   setLabelPriorities() {
@@ -642,13 +642,88 @@ class Chart {
       searchStartIndex,
       searchEndIndex,
     } = this.findSearchIndexesInInterval(
-        this.state.labelsX,
-        this.state.minX,
-        this.state.maxX,
-        x => x.x
+      this.state.labelsX,
+      this.state.minX,
+      this.state.maxX,
+      x => x.x
     );
 
-    const lastResizeWidth =  this.state.maxX - this.state.minX;
+    const origWidth = this.state.maxXOrig - this.state.minXOrig;
+    const newResizeWidth = this.state.maxX - this.state.minX;
+    const delta = this.state.prevWidth - newResizeWidth;
+
+    console.log('delta: ', delta);
+    this.state.prevWidth = newResizeWidth;
+    console.log('newResizeWidth: ', newResizeWidth);
+    console.log('this.state.lastResizeWidth: ', this.state.lastResizeWidth);
+    const ratio = newResizeWidth / this.state.lastResizeWidth;
+    console.log('ratio: ', ratio);
+    const ratioToCompareTo = 0.7;
+    console.log('ratioToCompareTo: ', ratioToCompareTo);
+
+    const pixelA = this.normalizeValue(
+      this.state.labelsX[0].x - this.state.minXOrig,
+      this.state.minX,
+      this.state.maxX,
+      0,
+      this.state.mainCanvasWidth,
+      false
+    );
+    const pixelB = this.normalizeValue(
+      this.state.labelsX[1].x - this.state.minXOrig,
+      this.state.minX,
+      this.state.maxX,
+      0,
+      this.state.mainCanvasWidth,
+      false
+    );
+    const diff = pixelB - pixelA;
+    console.log('diff: ', diff);
+
+    if (diff >= COMFORT_TEXT_SPACING && delta > 0) {
+      let prevX = this.state.minX;
+      console.log('this.state.labelX before: ', this.state.labelsX);
+      const newLabels = this.state.labelsX.reduce((res, label, index) => {
+        if (index === 0) {
+          prevX = label.x;
+          return res;
+        }
+
+        console.log('prevX: ', prevX);
+        console.log('label.x: ', label.x);
+        const midX = prevX + (label.x - prevX) / 2;
+
+        const midLabel = {
+          x: midX,
+          opacity: 1,
+          priority: this.state.resizeCounter,
+        };
+        prevX = label.x;
+
+        binaryInsert(res, midLabel, (a, b) => {
+          return a.x > b.x ? 1 : a.x < b.x ? -1 : 0;
+        });
+
+        return res;
+      }, this.state.labelsX.slice());
+      this.state.labelsX = newLabels;
+      console.log('this.state.labelsX after: ', this.state.labelsX);
+      this.state.lastResizeWidth = newResizeWidth;
+      this.state.resizeCounter++;
+
+      console.log('this.state.resizeCounter: ', this.state.resizeCounter);
+    }
+
+    if (diff < MINIMAL_TEXT_SPACING && delta < 0) {
+      console.log('priority to remove: ', this.state.resizeCounter - 1);
+      console.log('this.state.labelsX before: ', this.state.labelsX);
+      const newLabels = this.state.labelsX.filter(label => label.priority !== this.state.resizeCounter - 1);
+      this.state.lastResizeWidth = newResizeWidth;
+      this.state.resizeCounter--;
+
+      this.state.labelsX = newLabels;
+      console.log('this.state.labelsX after: ', this.state.labelsX);
+    }
   }
 
   /**
@@ -989,7 +1064,7 @@ class Chart {
       );
       const date = new Date(+v.x);
       context.fillText(
-        v.priority,
+        `${date.toString().slice(4, 10)} - ${v.priority}`,
         x - TEXT_WIDTH / 2,
         this.state.mainCanvasHeight - 10,
         TEXT_WIDTH
@@ -1002,7 +1077,7 @@ class Chart {
   }
 }
 
-new Array(1).fill(1).forEach((value, counter) => {
+new Array(5).fill(1).forEach((value, counter) => {
   const chart = new Chart(counter);
   window.addEventListener('DOMContentLoaded', () => chart.onLoad(), false);
   window.addEventListener('unload', () => chart.onUnLoad(), false);
