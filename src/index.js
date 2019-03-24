@@ -8,6 +8,16 @@
  */
 
 import { data, DataEntry } from './data.js';
+import { TEXT_WIDTH } from './constants.js';
+
+const PriorityColor = {
+  0: 'red',
+  1: 'blue',
+  2: 'magenta',
+  3: 'cyan',
+  4: 'yellow',
+  5: 'black',
+};
 
 const SVG_INNER_TEXT =
   '<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#ffffff;enable-background:accumulate;" d="m 65.3124,984.14343 -21.5937,22.46867 -9.4063,-8.68742 -6.8124,7.34372 13,12 3.625,3.3125 3.375,-3.5313 25,-25.99992 -7.1876,-6.90625 z" fill="#ffffff" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>';
@@ -50,6 +60,11 @@ class Chart {
     this.onTouchMoveBound = this.onTouchMove.bind(this);
     this.onToggleBound = this.onToggle.bind(this);
     this.toggleNightModeBound = this.toggleNightMode.bind(this);
+    this.onTouchStartBound = this.onTouchStart.bind(this);
+    this.onMouseDownBound = this.onMouseDown.bind(this);
+    this.onGripTouchStartBound = this.onGripTouchStart.bind(this);
+    this.onGripMouseDownBound = this.onGripMouseDown.bind(this);
+    this.onTouchEndBound = this.onTouchEnd.bind(this);
 
     /** @type {Element} */
     this.dragTarget = null;
@@ -85,7 +100,10 @@ class Chart {
 
       colors: [],
       initialRender: true,
+      //TODO(alexk): switch Night Mode be time of the day
       nightMode: false,
+      labelsX: [],
+      priority: 0,
     };
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
@@ -117,12 +135,12 @@ class Chart {
     this.context = this.setupCanvas(this.mainCanvas);
     this.contextLegend = this.setupCanvas(this.legendCanvas);
 
-    this.state.mainCanvasWidth = this.mainCanvas.width;
-    this.state.mainCanvasHeight = this.mainCanvas.height;
-    this.state.legendCanvasWidth = this.legendCanvas.width;
-    this.state.legendCanvasHeight = this.legendCanvas.height;
+    this.state.mainCanvasWidth = this.mainCanvas.width / this.dpr;
+    this.state.mainCanvasHeight = this.mainCanvas.height / this.dpr;
+    this.state.legendCanvasWidth = this.legendCanvas.width / this.dpr;
+    this.state.legendCanvasHeight = this.legendCanvas.height / this.dpr;
 
-    this.state.legendWidth = this.state.legendCanvasWidth / this.dpr;
+    this.state.legendWidth = this.state.legendCanvasWidth;
     this.state.gripWidth = +/\d+/.exec(
       window.getComputedStyle(this.gripLeft)['width']
     )[0];
@@ -131,6 +149,8 @@ class Chart {
 
     this.attachEvents();
 
+    this.createLabelsX(this.state);
+    this.setLabelPriorities();
     this.render();
   }
 
@@ -211,93 +231,73 @@ class Chart {
   attachEvents() {
     this.gripLeft.addEventListener(
       'mousedown',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-        e.preventDefault();
-      },
+      this.onGripMouseDownBound,
       false
     );
     this.gripLeft.addEventListener(
       'touchstart',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-        e.preventDefault();
-      },
+      this.onGripTouchStartBound,
       false
     );
     this.gripRight.addEventListener(
       'mousedown',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-        e.preventDefault();
-      },
+      this.onGripMouseDownBound,
       false
     );
     this.gripRight.addEventListener(
       'touchstart',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-        e.preventDefault();
-      },
+      this.onGripTouchStartBound,
       false
     );
-    this.window.addEventListener(
-      'mousedown',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-
-        const windowRect = this.window.getBoundingClientRect();
-        this.windowRectWidth = windowRect.width;
-        this.draggingOffset = e.pageX - windowRect.left;
-        e.preventDefault();
-      },
-      false
-    );
-    this.window.addEventListener(
-      'touchstart',
-      e => {
-        this.dragTarget = e.currentTarget;
-        let rect = this.legendCanvas.getBoundingClientRect();
-        this.dragLeft = rect.left;
-        this.dragRight = rect.right;
-        this.dragWidth = rect.width;
-
-        const windowRect = this.window.getBoundingClientRect();
-        this.windowRectWidth = windowRect.width;
-        this.draggingOffset = e.changedTouches[0].pageX - windowRect.left;
-        e.preventDefault();
-      },
-      false
-    );
+    this.window.addEventListener('mousedown', this.onMouseDownBound, false);
+    this.window.addEventListener('touchstart', this.onTouchStartBound, false);
     document.addEventListener('mousemove', this.onMouseMoveBound);
     document.addEventListener('touchmove', this.onTouchMoveBound);
-    document.addEventListener('mouseup', e => {
-      this.dragTarget = null;
-    });
-    document.addEventListener('touchend', e => {
-      this.dragTarget = null;
-    });
+    document.addEventListener('mouseup', this.onTouchEndBound);
+    document.addEventListener('touchend', this.onTouchEndBound);
     this.dayNightSwitch.addEventListener('click', this.toggleNightModeBound);
+  }
+
+  onGripTouchStart(e) {
+    this.initGripDrag(e);
+    this.lastPageX = e.changedTouches[0].pageX;
+  }
+
+  onGripMouseDown(e) {
+    this.initGripDrag(e);
+    this.lastPageX = e.pageX;
+  }
+
+  initGripDrag(e) {
+    this.dragTarget = e.currentTarget;
+    let rect = this.legendCanvas.getBoundingClientRect();
+    this.dragLeft = rect.left;
+    this.dragRight = rect.right;
+    this.dragWidth = rect.width;
+    e.preventDefault();
+  }
+
+  onTouchStart(e) {
+    const windowRect = this.initDrag(e);
+    this.draggingOffset = e.changedTouches[0].pageX - windowRect.left;
+  }
+
+  onMouseDown(e) {
+    const windowRect = this.initDrag(e);
+    this.draggingOffset = e.pageX - windowRect.left;
+  }
+
+  initDrag(e) {
+    this.dragTarget = e.currentTarget;
+    let rect = this.legendCanvas.getBoundingClientRect();
+    this.dragLeft = rect.left;
+    this.dragRight = rect.right;
+    this.dragWidth = rect.width;
+
+    const windowRect = this.window.getBoundingClientRect();
+    this.windowRectWidth = windowRect.width;
+    e.preventDefault();
+    return windowRect;
   }
 
   toggleNightMode() {
@@ -331,6 +331,15 @@ class Chart {
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
 
+      console.log('e.pageX: ', e.pageX);
+      console.log('this.lastPageX: ', this.lastPageX);
+      if (e.pageX < this.lastPageX) {
+        this.formatLabelsXOnDragGrow(this.state, true);
+      }
+      if (e.pageX > this.lastPageX) {
+        this.formatLabelsXOnDragShrink(this.state, true);
+      }
+      this.lastPageX = e.pageX;
       this.animateWindow();
       return;
     }
@@ -346,6 +355,13 @@ class Chart {
         this.state.minXOrig +
         ((this.state.maxXOrig - this.state.minXOrig) * relXBound) /
           this.dragWidth;
+      if (e.pageX < this.lastPageX) {
+        this.formatLabelsXOnDragShrink(this.state, true);
+      }
+      if (e.pageX > this.lastPageX) {
+        this.formatLabelsXOnDragGrow(this.state, false);
+      }
+      this.lastPageX = e.pageX;
       this.animateWindow();
       return;
     }
@@ -378,6 +394,10 @@ class Chart {
     e.preventDefault();
   }
 
+  onTouchEnd(e) {
+    this.dragTarget = null;
+  }
+
   animateWindow() {
     let steps = 0;
     const { minY: newMinY, maxY: newMaxY } = this.findYExtremumsInInterval(
@@ -385,6 +405,7 @@ class Chart {
       this.state.minX,
       this.state.maxX
     );
+
     const deltaMinY = newMinY - this.state.minY;
     const deltaMaxY = newMaxY - this.state.maxY;
     const STEPS_QUANTITY = 10;
@@ -481,6 +502,210 @@ class Chart {
     return state;
   }
 
+  /** @param {State} state */
+  createLabelsX(state) {
+    const times = this.state.mainCanvasWidth / (2 * this.state.gripWidth);
+
+    const howManyLabelsInWindow = 6;
+    /*const initialX = this.denormalizeValue(TEXT_WIDTH / 2, this.state.minXOrig, this.state.maxXOrig, 0, this.state.mainCanvasWidth);*/
+    const labelsX = new Array(howManyLabelsInWindow * times)
+      .fill(1)
+      .map((v, index) => {
+        const scale = this.state.maxXOrig - this.state.minXOrig;
+        const x = this.state.minXOrig + index * (scale / (6 * times));
+        return {
+          x: x,
+          opacity: 1,
+          priority: 0,
+        };
+      });
+    this.state.labelsX = labelsX;
+  }
+
+  setLabelPriorities() {
+    let prioritiesSetCounter = 0;
+    let currentPriority = 0;
+
+    const labelsX = this.state.labelsX;
+    const mainPointsStep = Math.floor(labelsX.length / 6);
+    let counter = 0;
+    while (counter < labelsX.length) {
+      labelsX[counter].priority = Infinity;
+      prioritiesSetCounter++;
+      counter += mainPointsStep;
+    }
+    labelsX[labelsX.length - 1].priority = 0;
+    prioritiesSetCounter++;
+    currentPriority++;
+
+    while (currentPriority < 8) {
+      let counter = 0;
+      let which = 0;
+      while (counter < labelsX.length) {
+        if (currentPriority - labelsX[counter].priority === 1) {
+          which++;
+          if (which === 2) {
+            labelsX[counter].priority = currentPriority;
+            prioritiesSetCounter++;
+            which = 0;
+          } else {
+            prioritiesSetCounter--;
+          }
+        }
+        counter++;
+      }
+      currentPriority++;
+    }
+  }
+
+  /** @param {State} state */
+  formatLabelsXOnDragGrow(state, left) {
+    console.log('formatLabelsXOnDragGrow: ', left);
+    if (!window['drag']) {
+      return;
+    }
+
+    const howManyLabelsInWindowDefault = 7;
+    const {
+      searchStartIndex,
+      searchEndIndex,
+    } = this.findSearchIndexesInInterval(
+      this.state.labelsX,
+      this.state.minX,
+      this.state.maxX,
+      x => x.x
+    );
+    const visible = this.state.labelsX
+      .slice(searchStartIndex, searchEndIndex + 1)
+      .filter(x => x.opacity === 1);
+    const howManyLabelsInWindow = visible.length;
+    if (howManyLabelsInWindow > howManyLabelsInWindowDefault) {
+      this.state.priority++;
+      this.state.labelsX
+        .filter(label => label.priority < this.state.priority)
+        .forEach(label => (label.opacity = 0));
+
+      /*if (left) {
+        this.state.labelsX
+          .slice(0, searchEndIndex + 1)
+          .filter(x => x.opacity === 1)
+          .reverse()
+          .forEach((label, index) => {
+            if (index % 2 !== 0) {
+              label.opacity = 0;
+            }
+          });
+        return;
+      }
+
+      this.state.labelsX
+        .slice(searchStartIndex, this.state.labelsX.length)
+        .filter(x => x.opacity === 1)
+        .forEach((label, index) => {
+          if (index % 2 !== 0) {
+            label.opacity = 0;
+          }
+        });*/
+    }
+  }
+
+  /** @param {State} state */
+  formatLabelsXOnDragShrink(state, left) {
+    console.log('formatLabelsXOnDragShrink: ', left);
+    if (!window['drag']) {
+      return;
+    }
+
+    const howManyLabelsInWindowDefault = 7;
+    const {
+      searchStartIndex,
+      searchEndIndex,
+    } = this.findSearchIndexesInInterval(
+      this.state.labelsX,
+      this.state.minX,
+      this.state.maxX,
+      x => x.x
+    );
+    const visible = this.state.labelsX
+      .slice(searchStartIndex, searchEndIndex + 1)
+      .filter(x => x.opacity === 1);
+    console.log('visible.length: ', visible.length);
+    const howManyLabelsInWindow = visible.length;
+    if (howManyLabelsInWindow < howManyLabelsInWindowDefault) {
+      if (left) {
+        let lastVisibleIndex = searchStartIndex;
+        this.state.labelsX.forEach((label, index) => {
+          if (index > lastVisibleIndex && label.opacity === 1) {
+            const midIndex = Math.floor((index - lastVisibleIndex) / 2);
+            this.state.labelsX[midIndex].opacity = 1;
+            lastVisibleIndex = index;
+          }
+        });
+        return;
+      }
+
+      this.state.labelsX
+        .slice(searchStartIndex, this.state.labelsX.length)
+        .filter(x => x.opacity === 1)
+        .forEach((label, index) => {
+          if (index % 2 !== 0) {
+            label.opacity = 0;
+          }
+        });
+    }
+    console.log('labelsX: ', this.state.labelsX);
+  }
+
+  makeVisibleBasedOnZoomLevel() {
+    const zoom =
+      (this.state.maxX - this.state.minX) /
+      (this.state.maxXOrig - this.state.minXOrig);
+    console.log('zoom: ', zoom);
+    const zoneLength = Math.floor((zoom * this.state.labelsX.length) / 6);
+    console.log('zoneLength: ', zoneLength);
+    let zoneCounter = 0;
+    for (let counter = 0; counter < this.state.labelsX.length; counter++) {
+      if (zoneCounter === zoneLength) {
+        zoneCounter = 0;
+      }
+      if (zoneCounter === 0) {
+        this.state.labelsX[counter].opacity = 1;
+      } else {
+        this.state.labelsX[counter].opacity = 0;
+      }
+      zoneCounter++;
+    }
+  }
+
+  /**
+   * @param {number} index
+   * @param {number} lastOpaqueX
+   * @param {x} x
+   * */
+  getOpacityByIndex(index, lastOpaqueX, x) {
+    const pixelLastOpaqueX = this.normalizeValue(
+      lastOpaqueX,
+      this.state.minX,
+      this.state.maxX,
+      0,
+      this.state.mainCanvasWidth,
+      false
+    );
+    const pixelX = this.normalizeValue(
+      x,
+      this.state.minX,
+      this.state.maxX,
+      0,
+      this.state.mainCanvasWidth,
+      false
+    );
+
+    if (Math.abs(pixelX - pixelLastOpaqueX) < 80) {
+      return 0;
+    }
+    return 1;
+  }
+
   /**
    * @param {State} state
    * @return {Extremums}
@@ -509,20 +734,10 @@ class Chart {
   findYExtremumsInInterval(state, minX, maxX) {
     const lines = state.lines;
     const xs = lines[0];
-    let searchStartIndex = 0;
-    for (let counter = 0; counter < xs.length; counter++) {
-      if (xs[counter] >= minX && counter - 1 >= 0) {
-        searchStartIndex = counter - 1;
-        break;
-      }
-    }
-    let searchEndIndex = xs.length - 1;
-    for (let counter = xs.length - 1; counter >= 0; counter--) {
-      if (xs[counter] <= maxX && counter + 1 < xs.length) {
-        searchEndIndex = counter + 1;
-        break;
-      }
-    }
+    const {
+      searchStartIndex,
+      searchEndIndex,
+    } = this.findSearchIndexesInInterval(xs, minX, maxX);
     const maxY = lines
       .slice(1)
       .filter((line, index) => state.enabled[index])
@@ -548,14 +763,41 @@ class Chart {
     return { maxY, minY };
   }
 
+  findSearchIndexesInInterval(xs, minX, maxX, extract = x => x) {
+    let searchStartIndex = 0;
+    for (let counter = 0; counter < xs.length; counter++) {
+      if (extract(xs[counter]) >= minX && counter - 1 >= 0) {
+        searchStartIndex = counter - 1;
+        break;
+      }
+    }
+    let searchEndIndex = xs.length - 1;
+    for (let counter = xs.length - 1; counter >= 0; counter--) {
+      if (extract(xs[counter]) <= maxX && counter + 1 < xs.length) {
+        searchEndIndex = counter + 1;
+        break;
+      }
+    }
+    return { searchStartIndex, searchEndIndex };
+  }
+
   /**
    * @param {State} state
+   * @param {number} screenMinX
+   * @param {number} screenMinY
    * @param {number} canvasWidth
    * @param {number} canvasHeight
    * @param {boolean} useOrig
    * @return {!Array.<!Array.<number>>}
    */
-  normalizeEntry(state, canvasWidth, canvasHeight, useOrig) {
+  normalizeEntry(
+    state,
+    screenMinX,
+    screenMinY,
+    canvasWidth,
+    canvasHeight,
+    useOrig
+  ) {
     const lines = state.lines;
     const minX = useOrig ? state.minXOrig : state.minX;
     const maxX = useOrig ? state.maxXOrig : state.maxX;
@@ -564,19 +806,18 @@ class Chart {
 
     return lines.map((line, index) => {
       if (index === 0) {
-        return line.map(
-          v =>
-            this.normalizeValue(v, minX, maxX, 0, canvasWidth, false) / this.dpr
+        return line.map(v =>
+          this.normalizeValue(v, minX, maxX, screenMinX, canvasWidth, false)
         );
       }
-      return line.map(
-        v =>
-          this.normalizeValue(v, minY, maxY, 0, canvasHeight, true) / this.dpr
+      return line.map(v =>
+        this.normalizeValue(v, minY, maxY, screenMinY, canvasHeight, true)
       );
     });
   }
 
   /**
+   * Returns screen coordinate by input value.
    * @param {number} value
    * @param {number} minValue
    * @param {number} maxValue
@@ -587,8 +828,22 @@ class Chart {
    * */
   normalizeValue(value, minValue, maxValue, screenMin, screenMax, isY) {
     const pixel = (maxValue - minValue) / (screenMax - screenMin);
-    const coordinate = (value - minValue) / pixel;
+    const coordinate = screenMin + (value - minValue) / pixel;
     return isY ? screenMax - coordinate : coordinate;
+  }
+
+  /**
+   * Returns input value by screen coordinate.
+   * @param {number} coordinate
+   * @param {number} minValue
+   * @param {number} maxValue
+   * @param {number} screenMin
+   * @param {number} screenMax
+   * @return {number}
+   * */
+  denormalizeValue(coordinate, minValue, maxValue, screenMin, screenMax) {
+    const value = minValue + ((maxValue - minValue) * coordinate) / screenMax;
+    return value;
   }
 
   render(loop = false) {
@@ -619,6 +874,8 @@ class Chart {
 
       const normalizedLinesMain = this.normalizeEntry(
         this.state,
+        0,
+        30,
         this.state.mainCanvasWidth,
         this.state.mainCanvasHeight,
         false
@@ -634,11 +891,15 @@ class Chart {
 
       const normalizedLinesLegend = this.normalizeEntry(
         this.state,
+        0,
+        0,
         this.state.legendCanvasWidth,
         this.state.legendCanvasHeight,
         true
       );
       this.renderLines(this.contextLegend, normalizedLinesLegend, 1);
+
+      this.renderAxisX(this.context);
 
       this.renderWindow();
 
@@ -734,12 +995,40 @@ class Chart {
     }
   }
 
+  /** @param {CanvasRenderingContext2D} context */
+  renderAxisX(context) {
+    context.font = '16px arial';
+    context.textAlign = 'left';
+    context.fillStyle = 'rgb(147,157,165)';
+    this.state.labelsX.forEach((v, index) => {
+      if (v.opacity < 1) {
+        return;
+      }
+
+      const x = this.normalizeValue(
+        v.x,
+        this.state.minX,
+        this.state.maxX,
+        0,
+        this.state.mainCanvasWidth,
+        false
+      );
+      const date = new Date(+v.x);
+      context.fillText(
+        v.priority,
+        x - TEXT_WIDTH / 2,
+        this.state.mainCanvasHeight - 10,
+        TEXT_WIDTH
+      );
+    });
+  }
+
   checkRender() {
     return [...this.taskBatches.values()].some(v => !!v.length);
   }
 }
 
-new Array(5).fill(1).forEach((value, counter) => {
+new Array(data.length).fill(1).forEach((value, counter) => {
   const chart = new Chart(counter);
   window.addEventListener('DOMContentLoaded', () => chart.onLoad(), false);
   window.addEventListener('unload', () => chart.onUnLoad(), false);
@@ -788,6 +1077,7 @@ const serializeColor = ({ r, g, b, a }) => {
 
       initialRender: boolean,
       nightMode: boolean,
+      labelsX: Array.<{x: number, opacity: number, priority: number}>
 }} */
 const State = {};
 
