@@ -9,6 +9,9 @@
 
 import { data, DataEntry } from './data.js';
 
+const SVG_INNER_TEXT =
+  '<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#ffffff;enable-background:accumulate;" d="m 65.3124,984.14343 -21.5937,22.46867 -9.4063,-8.68742 -6.8124,7.34372 13,12 3.625,3.3125 3.375,-3.5313 25,-25.99992 -7.1876,-6.90625 z" fill="#ffffff" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>';
+
 class Chart {
   /**
    * @param {number} chartNumber
@@ -33,6 +36,8 @@ class Chart {
     this.glassRight = null;
     /** @type {Element} */
     this.window = null;
+    /** @type {Array.<Element>}*/
+    this.buttons = [];
 
     /** @type {CanvasRenderingContext2D} */
     this.context = null;
@@ -57,7 +62,7 @@ class Chart {
       legendCanvasHeight: 100,
 
       lines: [],
-      enabled: {},
+      enabled: [],
 
       minX: 0,
       maxX: 0,
@@ -104,7 +109,9 @@ class Chart {
     this.window = document.querySelectorAll('.window')[this.chartNumber];
     this.dayNightSwitch = document.querySelector('.day-night-switch');
 
-    this.mainCanvas.style.height = window.getComputedStyle(this.mainCanvas)['width'];
+    this.mainCanvas.style.height = window.getComputedStyle(this.mainCanvas)[
+      'width'
+    ];
     this.context = this.setupCanvas(this.mainCanvas);
     this.contextLegend = this.setupCanvas(this.legendCanvas);
 
@@ -135,9 +142,8 @@ class Chart {
       button.classList.add('button');
       const circle = document.createElement('span');
       circle.classList.add('circle');
-      circle.style.background = serializeColor(state.colors[index]);
-      circle.innerHTML =
-        '<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" version="1.1" x="0px" y="0px" viewBox="0 0 100 125"><g transform="translate(0,-952.36218)"><path style="text-indent:0;text-transform:none;direction:ltr;block-progression:tb;baseline-shift:baseline;color:#ffffff;enable-background:accumulate;" d="m 65.3124,984.14343 -21.5937,22.46867 -9.4063,-8.68742 -6.8124,7.34372 13,12 3.625,3.3125 3.375,-3.5313 25,-25.99992 -7.1876,-6.90625 z" fill="#ffffff" fill-opacity="1" stroke="none" marker="none" visibility="visible" display="inline" overflow="visible"/></g></svg>';
+      circle.style.borderColor = serializeColor(state.colors[index]);
+
       const label = document.createTextNode(name);
       button.appendChild(circle);
       button.appendChild(label);
@@ -145,9 +151,10 @@ class Chart {
       button.dataset['chartId'] = String(index);
 
       button.addEventListener('click', this.onToggleBound, false);
-
-      this.renderButtons(this.state);
+      this.buttons.push(button);
     });
+
+    this.renderButtons(this.state);
   }
 
   onToggle(e) {
@@ -175,16 +182,19 @@ class Chart {
     this.taskBatches.set(
       AnimationTypes.Toggle,
       new Array(STEPS_QUANTITY).fill(1).map(v => timestamp => {
-        const stepsToAdd = Math.ceil(Math.floor(timestamp - prevTimestamp) / 17) || 1;
+        const stepsToAdd =
+          Math.ceil(Math.floor(timestamp - prevTimestamp) / 17) || 1;
         prevTimestamp = timestamp;
         console.log('stepsToAdd: ', stepsToAdd);
         steps += stepsToAdd;
 
         if (steps < STEPS_QUANTITY) {
-          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY * stepsToAdd;
-          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY * stepsToAdd;
+          this.state.minY =
+            this.state.minY + (deltaMinY / STEPS_QUANTITY) * stepsToAdd;
+          this.state.maxY =
+            this.state.maxY + (deltaMaxY / STEPS_QUANTITY) * stepsToAdd;
           this.state.colors[chartId].a =
-          this.state.colors[chartId].a + deltaOpacity * stepsToAdd;
+            this.state.colors[chartId].a + deltaOpacity * stepsToAdd;
           return;
         }
 
@@ -289,7 +299,7 @@ class Chart {
     });
     this.dayNightSwitch.addEventListener('click', e => {
       document.documentElement.classList.toggle('night');
-    })
+    });
   }
 
   onMouseMove(e) {
@@ -372,17 +382,21 @@ class Chart {
     let prevTimestamp = performance.now();
     this.taskBatches.set(
       AnimationTypes.Drag,
-      new Array(STEPS_QUANTITY).fill(1).map(v => (timestamp) => {
-        const stepsToAdd = Math.ceil(Math.floor(timestamp - prevTimestamp) / 17);
+      new Array(STEPS_QUANTITY).fill(1).map(v => timestamp => {
+        const stepsToAdd = Math.ceil(
+          Math.floor(timestamp - prevTimestamp) / 17
+        );
         const stepsToAddSafe = stepsToAdd <= 0 ? 1 : stepsToAdd;
         prevTimestamp = timestamp;
         console.log('stepsToAdd: ', stepsToAddSafe);
         steps += stepsToAddSafe;
 
         if (steps < STEPS_QUANTITY - 1) {
-          this.state.minY = this.state.minY + deltaMinY / STEPS_QUANTITY * stepsToAddSafe;
-          this.state.maxY = this.state.maxY + deltaMaxY / STEPS_QUANTITY * stepsToAddSafe;
-          return
+          this.state.minY =
+            this.state.minY + (deltaMinY / STEPS_QUANTITY) * stepsToAddSafe;
+          this.state.maxY =
+            this.state.maxY + (deltaMaxY / STEPS_QUANTITY) * stepsToAddSafe;
+          return;
         }
 
         this.state.minY = newMinY;
@@ -629,7 +643,22 @@ class Chart {
     //console.timeEnd('render');
   }
 
-  renderButtons(state) {}
+  renderButtons(state) {
+    state.enabled.forEach((enabled, index) => {
+      console.log('enabled: ', enabled);
+      console.log('index: ', index);
+      const button = this.buttons[index];
+      const circle = button.querySelector('span');
+      if (enabled) {
+        const backgroundColor = { ...state.colors[index], a: 1 };
+        circle.style.backgroundColor =  serializeColor(backgroundColor);
+        circle.innerHTML = SVG_INNER_TEXT;
+      } else {
+        circle.style.backgroundColor = 'white';
+        circle.innerHTML = '';
+      }
+    });
+  }
 
   renderWindow() {
     const { gripLeftPos, gripRightPos } = this.calculateGripPos(this.state);

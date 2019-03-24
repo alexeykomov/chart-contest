@@ -139,6 +139,7 @@ main {
 .button .circle {
     display: inline-block;
     border-radius: 50%;
+    border: 1px solid transparent;
     width: 20px;
     height: 20px;
     line-height: 20px;
@@ -148,7 +149,7 @@ main {
     margin-top: -10px;
     font-size: 16px;
     color: white;
-    transition: background-color;
+    transition: background-color 200ms;
 }
 
 .day-night-switch {
