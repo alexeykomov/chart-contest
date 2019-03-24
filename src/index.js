@@ -7,14 +7,14 @@
  * @author alexeykcontact@gmail.com (Alex K)
  */
 
-import { data, DataEntry } from './data.js';
+import {data, DataEntry} from './data.js';
 import {
-  TEXT_WIDTH,
-  HOW_MANY_LABELS_IN_WINDOW,
   COMFORT_TEXT_SPACING,
+  HOW_MANY_LABELS_IN_WINDOW,
   MINIMAL_TEXT_SPACING,
+  TEXT_WIDTH,
 } from './constants.js';
-import { binaryInsert } from './utils.js';
+import {binaryInsert} from './utils.js';
 
 const PriorityColor = {
   0: 'red',
@@ -107,7 +107,10 @@ class Chart {
       colors: [],
       initialRender: true,
       //TODO(alexk): switch Night Mode be time of the day
-      nightMode: false,
+      nightMode: (() => {
+        const now = new Date();
+        return now.getHours() === 0 || now.getHours() < 8;
+      })(),
       labelsX: [],
       priority: 0,
       lastResizeWidth: 0,
@@ -137,6 +140,9 @@ class Chart {
     ];
     this.window = document.querySelectorAll('.window')[this.chartNumber];
     this.dayNightSwitch = document.querySelector('.day-night-switch');
+    if (this.state.nightMode) {
+      this.renderNightMode();
+    }
 
     this.mainCanvas.style.height = window.getComputedStyle(this.mainCanvas)[
       'width'
@@ -159,8 +165,6 @@ class Chart {
     this.attachEvents();
 
     this.createLabelsX(this.state);
-    //this.setLabelPriorities();
-    //this.makeVisibleBasedOnZoomLevel();
 
     this.render();
   }
@@ -312,14 +316,18 @@ class Chart {
   }
 
   toggleNightMode() {
+    this.state.nightMode = !this.state.nightMode;
+    this.renderNightMode();
+  }
+
+  renderNightMode() {
     if (this.state.nightMode) {
-      document.documentElement.classList.remove('night');
-      this.dayNightSwitch.innerText = 'Switch to Night Mode';
-    } else {
       document.documentElement.classList.add('night');
       this.dayNightSwitch.innerText = 'Switch to Day Mode';
+    } else {
+      document.documentElement.classList.remove('night');
+      this.dayNightSwitch.innerText = 'Switch to Night Mode';
     }
-    this.state.nightMode = !this.state.nightMode;
   }
 
   onMouseMove(e) {
@@ -503,10 +511,6 @@ class Chart {
 
   /** @param {State} state */
   createLabelsX(state) {
-    const times = this.state.mainCanvasWidth / (2 * this.state.gripWidth);
-
-    const howManyLabelsInWindow = HOW_MANY_LABELS_IN_WINDOW;
-    /*const initialX = this.denormalizeValue(TEXT_WIDTH / 2, this.state.minXOrig, this.state.maxXOrig, 0, this.state.mainCanvasWidth);*/
     const scale = this.state.maxXOrig - this.state.minXOrig;
     const labelXEmpty = new Array(HOW_MANY_LABELS_IN_WINDOW - 1).fill(1);
     const labelsX = labelXEmpty
@@ -524,117 +528,6 @@ class Chart {
     this.state.labelsX = labelsX;
     this.state.lastResizeWidth = scale;
     this.state.prevWidth = scale;
-  }
-
-  setLabelPriorities() {
-    let prioritiesSetCounter = 0;
-    let currentPriority = 0;
-    const labelsX = this.state.labelsX;
-
-    const maximalPriority = getMaximalPriority(
-      labelsX.length - HOW_MANY_LABELS_IN_WINDOW
-    );
-    const mainPointsStep = Math.floor(labelsX.length / 6);
-    let counter = 0;
-    while (counter < labelsX.length) {
-      labelsX[counter].priority = maximalPriority;
-      prioritiesSetCounter++;
-      counter += mainPointsStep;
-    }
-    labelsX[labelsX.length - 1].priority = 0;
-    prioritiesSetCounter++;
-    currentPriority++;
-
-    while (currentPriority < maximalPriority) {
-      let counter = 0;
-      let which = 0;
-      while (counter < labelsX.length) {
-        if (currentPriority - labelsX[counter].priority === 1) {
-          which++;
-          if (which === 2) {
-            labelsX[counter].priority = currentPriority;
-            prioritiesSetCounter++;
-            which = 0;
-          } else {
-            prioritiesSetCounter--;
-          }
-        }
-        counter++;
-      }
-      currentPriority++;
-    }
-
-    console.log('labelsX: ', labelsX);
-  }
-
-  /** @param {State} state */
-  formatLabelsXOnDragGrow(state, left) {
-    console.log('formatLabelsXOnDragGrow: ', left);
-    const {
-      searchStartIndex,
-      searchEndIndex,
-    } = this.findSearchIndexesInInterval(
-      this.state.labelsX,
-      this.state.minX,
-      this.state.maxX,
-      x => x.x
-    );
-    const visible = this.state.labelsX
-      .slice(searchStartIndex, searchEndIndex + 1)
-      .filter(x => x.opacity === 1);
-    const howManyLabelsInWindow = visible.length;
-    if (howManyLabelsInWindow > HOW_MANY_LABELS_IN_WINDOW) {
-      this.state.priority++;
-      this.state.labelsX
-        .filter(label => label.priority < this.state.priority)
-        .forEach(label => (label.opacity = 0));
-    }
-  }
-
-  /** @param {State} state */
-  formatLabelsXOnDragShrink(state, left) {
-    console.log('formatLabelsXOnDragShrink: ', left);
-    const {
-      searchStartIndex,
-      searchEndIndex,
-    } = this.findSearchIndexesInInterval(
-      this.state.labelsX,
-      this.state.minX,
-      this.state.maxX,
-      x => x.x
-    );
-    const visible = this.state.labelsX
-      .slice(searchStartIndex, searchEndIndex + 1)
-      .filter(x => x.opacity === 1);
-    console.log('visible.length: ', visible.length);
-    const howManyLabelsInWindow = visible.length;
-    if (howManyLabelsInWindow < HOW_MANY_LABELS_IN_WINDOW) {
-      this.state.priority--;
-      this.state.labelsX
-        .filter(label => label.priority > this.state.priority)
-        .forEach(label => (label.opacity = 1));
-    }
-    console.log('labelsX: ', this.state.labelsX);
-  }
-
-  makeVisibleBasedOnZoomLevel() {
-    const {
-      searchStartIndex,
-      searchEndIndex,
-    } = this.findSearchIndexesInInterval(
-      this.state.labelsX,
-      this.state.minX,
-      this.state.maxX,
-      x => x.x
-    );
-    const maximalPriority = getMaximalPriority(
-      this.state.labelsX.length - HOW_MANY_LABELS_IN_WINDOW
-    );
-
-    this.state.labelsX
-      .slice(searchStartIndex, searchEndIndex + 1)
-      .filter(x => x.priority < maximalPriority)
-      .forEach(label => (label.opacity = 0));
   }
 
   resizeLabels() {
@@ -717,7 +610,13 @@ class Chart {
     if (diff < MINIMAL_TEXT_SPACING && delta < 0) {
       console.log('priority to remove: ', this.state.resizeCounter - 1);
       console.log('this.state.labelsX before: ', this.state.labelsX);
-      const newLabels = this.state.labelsX.filter(label => label.priority !== this.state.resizeCounter - 1);
+      const newLabels = this.state.labelsX.filter(label => {
+        if (label.priority === 0) {
+          return true;
+        }
+
+        return label.priority !== this.state.resizeCounter - 1;
+      });
       this.state.lastResizeWidth = newResizeWidth;
       this.state.resizeCounter--;
 
@@ -1064,7 +963,7 @@ class Chart {
       );
       const date = new Date(+v.x);
       context.fillText(
-        `${date.toString().slice(4, 10)} - ${v.priority}`,
+        date.toString().slice(4, 10),
         x - TEXT_WIDTH / 2,
         this.state.mainCanvasHeight - 10,
         TEXT_WIDTH

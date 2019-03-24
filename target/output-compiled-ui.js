@@ -3,20 +3,20 @@ const $data$$module$src$data$$ = JSON.parse('[{"columns":[["x",1542412800000,154
 function $defaultCompare$$module$src$utils$$($a$$, $b$$) {
   return $a$$ > $b$$ ? 1 : $a$$ < $b$$ ? -1 : 0;
 }
-function $binaryInsert$$module$src$utils$$($array$jscomp$9$$, $value$jscomp$86$$, $compareFn$jscomp$inline_19_opt_compareFn$jscomp$2$$) {
-  $compareFn$jscomp$inline_19_opt_compareFn$jscomp$2$$ = $compareFn$jscomp$inline_19_opt_compareFn$jscomp$2$$ || $defaultCompare$$module$src$utils$$;
-  for (var $left$jscomp$inline_21$$ = 0, $right$jscomp$inline_22$$ = $array$jscomp$9$$.length; $left$jscomp$inline_21$$ < $right$jscomp$inline_22$$;) {
-    var $middle$jscomp$inline_24$$ = $left$jscomp$inline_21$$ + $right$jscomp$inline_22$$ >> 1;
-    var $compareResult$jscomp$inline_25$$ = $compareFn$jscomp$inline_19_opt_compareFn$jscomp$2$$($value$jscomp$86$$, $array$jscomp$9$$[$middle$jscomp$inline_24$$]);
-    if (0 < $compareResult$jscomp$inline_25$$) {
-      $left$jscomp$inline_21$$ = $middle$jscomp$inline_24$$ + 1;
+function $binaryInsert$$module$src$utils$$($array$jscomp$9$$, $value$jscomp$86$$, $compareFn$jscomp$inline_15_opt_compareFn$jscomp$2$$) {
+  $compareFn$jscomp$inline_15_opt_compareFn$jscomp$2$$ = $compareFn$jscomp$inline_15_opt_compareFn$jscomp$2$$ || $defaultCompare$$module$src$utils$$;
+  for (var $left$jscomp$inline_17$$ = 0, $right$jscomp$inline_18$$ = $array$jscomp$9$$.length; $left$jscomp$inline_17$$ < $right$jscomp$inline_18$$;) {
+    var $middle$jscomp$inline_20$$ = $left$jscomp$inline_17$$ + $right$jscomp$inline_18$$ >> 1;
+    var $compareResult$jscomp$inline_21$$ = $compareFn$jscomp$inline_15_opt_compareFn$jscomp$2$$($value$jscomp$86$$, $array$jscomp$9$$[$middle$jscomp$inline_20$$]);
+    if (0 < $compareResult$jscomp$inline_21$$) {
+      $left$jscomp$inline_17$$ = $middle$jscomp$inline_20$$ + 1;
     } else {
-      $right$jscomp$inline_22$$ = $middle$jscomp$inline_24$$;
-      var $found$jscomp$inline_23_index$jscomp$70$$ = !$compareResult$jscomp$inline_25$$;
+      $right$jscomp$inline_18$$ = $middle$jscomp$inline_20$$;
+      var $found$jscomp$inline_19_index$jscomp$70$$ = !$compareResult$jscomp$inline_21$$;
     }
   }
-  $found$jscomp$inline_23_index$jscomp$70$$ = $found$jscomp$inline_23_index$jscomp$70$$ ? $left$jscomp$inline_21$$ : ~$left$jscomp$inline_21$$;
-  0 > $found$jscomp$inline_23_index$jscomp$70$$ && $splice$$module$src$utils$$($array$jscomp$9$$, -($found$jscomp$inline_23_index$jscomp$70$$ + 1), 0, $value$jscomp$86$$);
+  $found$jscomp$inline_19_index$jscomp$70$$ = $found$jscomp$inline_19_index$jscomp$70$$ ? $left$jscomp$inline_17$$ : ~$left$jscomp$inline_17$$;
+  0 > $found$jscomp$inline_19_index$jscomp$70$$ && $splice$$module$src$utils$$($array$jscomp$9$$, -($found$jscomp$inline_19_index$jscomp$70$$ + 1), 0, $value$jscomp$86$$);
 }
 function $splice$$module$src$utils$$($arr$jscomp$11$$, $index$jscomp$71$$, $howMany$$, $var_args$jscomp$44$$) {
   Array.prototype.splice.apply($arr$jscomp$11$$, $slice$$module$src$utils$$(arguments, 1));
@@ -30,13 +30,16 @@ function $slice$$module$src$utils$$($arr$jscomp$12$$, $start$jscomp$10$$, $opt_e
     $lines$$.push($col$$.slice(1));
     0 < $index$jscomp$73$$ && ($state$jscomp$1$$.enabled[$index$jscomp$73$$ - 1] = !0);
   });
-  const $colors$$ = Object.keys($entry$$.colors).map($JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$ => {
-    $JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$ = $entry$$.colors[$JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$].slice(1);
-    return $JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$ = {r:parseInt($JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$.slice(0, 2), 16), $g$:parseInt($JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$.slice(2, 4), 16), $b$:parseInt($JSCompiler_inline_result$jscomp$1_key$jscomp$38_withoutHash$jscomp$inline_7$$.slice(4), 16), $a$:1};
+  const $colors$$ = Object.keys($entry$$.colors).map($JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$ => {
+    $JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$ = $entry$$.colors[$JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$].slice(1);
+    return $JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$ = {r:parseInt($JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$.slice(0, 2), 16), $g$:parseInt($JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$.slice(2, 4), 16), $b$:parseInt($JSCompiler_inline_result$jscomp$2_key$jscomp$38_withoutHash$jscomp$inline_8$$.slice(4), 16), $a$:1};
   }), $names$$ = Object.keys($entry$$.names).map($key$jscomp$39$$ => $entry$$.names[$key$jscomp$39$$]);
   $state$jscomp$1$$.lines = $lines$$;
   $state$jscomp$1$$.$colors$ = $colors$$;
   $state$jscomp$1$$.names = $names$$;
+}
+function $JSCompiler_StaticMethods_renderNightMode$$($JSCompiler_StaticMethods_renderNightMode$self$$) {
+  $JSCompiler_StaticMethods_renderNightMode$self$$.$c$.$nightMode$ ? (document.documentElement.classList.add("night"), $JSCompiler_StaticMethods_renderNightMode$self$$.$B$.innerText = "Switch to Day Mode") : (document.documentElement.classList.remove("night"), $JSCompiler_StaticMethods_renderNightMode$self$$.$B$.innerText = "Switch to Night Mode");
 }
 function $JSCompiler_StaticMethods_setupCanvas$$($JSCompiler_StaticMethods_setupCanvas$self$$, $canvasEl$$) {
   const $context$$ = $canvasEl$$.getContext("2d");
@@ -72,7 +75,6 @@ function $JSCompiler_StaticMethods_createLabelsX$$($JSCompiler_StaticMethods_cre
 function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$self$$, $loop$$ = !1) {
   if ($loop$$ || !$JSCompiler_StaticMethods_render$self$$.$C$) {
     $JSCompiler_StaticMethods_render$self$$.$C$ = !0, requestAnimationFrame($highResTimestamp$$ => {
-      $JSCompiler_StaticMethods_resizeLabels$$($JSCompiler_StaticMethods_render$self$$);
       $JSCompiler_StaticMethods_render$self$$.$j$.forEach($batch$$ => {
         $batch$$.length && $batch$$.pop()($highResTimestamp$$);
       });
@@ -89,11 +91,11 @@ function $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_render$sel
     });
   }
 }
-function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$7$$, $maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$) {
-  var $lines$jscomp$2_minY$jscomp$3$$ = $state$jscomp$7$$.lines;
-  const {$searchStartIndex$:$searchStartIndex$jscomp$4$$, $searchEndIndex$:$searchEndIndex$jscomp$4$$} = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($lines$jscomp$2_minY$jscomp$3$$[0], $maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$);
-  $maxY$jscomp$3_minX$jscomp$2$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(($line$jscomp$4$$, $index$jscomp$79$$) => $state$jscomp$7$$.enabled[$index$jscomp$79$$]).reduce(($max$jscomp$2$$, $line$jscomp$5$$) => Math.max($max$jscomp$2$$, Math.max(...$line$jscomp$5$$.slice($searchStartIndex$jscomp$4$$, $searchEndIndex$jscomp$4$$ + 1))), -Infinity);
-  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(($line$jscomp$6$$, $index$jscomp$80$$) => $state$jscomp$7$$.enabled[$index$jscomp$80$$]).reduce(($max$jscomp$3$$, $line$jscomp$7$$) => Math.min($max$jscomp$3$$, Math.min(...$line$jscomp$7$$.slice($searchStartIndex$jscomp$4$$, $searchEndIndex$jscomp$4$$ + 1))), Infinity);
+function $JSCompiler_StaticMethods_findYExtremumsInInterval$$($state$jscomp$5$$, $maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$) {
+  var $lines$jscomp$2_minY$jscomp$3$$ = $state$jscomp$5$$.lines;
+  const {$searchStartIndex$:$searchStartIndex$jscomp$1$$, $searchEndIndex$:$searchEndIndex$jscomp$1$$} = $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($lines$jscomp$2_minY$jscomp$3$$[0], $maxY$jscomp$3_minX$jscomp$2$$, $maxX$jscomp$2$$);
+  $maxY$jscomp$3_minX$jscomp$2$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(($line$jscomp$4$$, $index$jscomp$79$$) => $state$jscomp$5$$.enabled[$index$jscomp$79$$]).reduce(($max$jscomp$2$$, $line$jscomp$5$$) => Math.max($max$jscomp$2$$, Math.max(...$line$jscomp$5$$.slice($searchStartIndex$jscomp$1$$, $searchEndIndex$jscomp$1$$ + 1))), -Infinity);
+  $lines$jscomp$2_minY$jscomp$3$$ = $lines$jscomp$2_minY$jscomp$3$$.slice(1).filter(($line$jscomp$6$$, $index$jscomp$80$$) => $state$jscomp$5$$.enabled[$index$jscomp$80$$]).reduce(($max$jscomp$3$$, $line$jscomp$7$$) => Math.min($max$jscomp$3$$, Math.min(...$line$jscomp$7$$.slice($searchStartIndex$jscomp$1$$, $searchEndIndex$jscomp$1$$ + 1))), Infinity);
   return {$maxY$:$maxY$jscomp$3_minX$jscomp$2$$, $minY$:$lines$jscomp$2_minY$jscomp$3$$};
 }
 function $JSCompiler_StaticMethods_initGripDrag$$($JSCompiler_StaticMethods_initGripDrag$self$$, $e$jscomp$10$$) {
@@ -113,11 +115,47 @@ function $JSCompiler_StaticMethods_initDrag$$($JSCompiler_StaticMethods_initDrag
   $e$jscomp$13$$.preventDefault();
   return $rect$jscomp$1_windowRect$jscomp$2$$;
 }
-function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_calculateGripPos$self$$, $state$jscomp$10$$) {
-  const $gripRightPos$jscomp$2$$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$10$$.$maxX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, 0, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1) - $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$gripWidth$;
-  $state$jscomp$10$$.$gripLeftPos$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$10$$.$minX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, 0, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1);
-  $state$jscomp$10$$.$gripRightPos$ = $gripRightPos$jscomp$2$$;
-  return $state$jscomp$10$$;
+function $JSCompiler_StaticMethods_calculateGripPos$$($JSCompiler_StaticMethods_calculateGripPos$self$$, $state$jscomp$8$$) {
+  const $gripRightPos$jscomp$2$$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$8$$.$maxX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, 0, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1) - $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$gripWidth$;
+  $state$jscomp$8$$.$gripLeftPos$ = $JSCompiler_StaticMethods_normalizeValue$$($state$jscomp$8$$.$minX$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$maxXOrig$, 0, $JSCompiler_StaticMethods_calculateGripPos$self$$.$c$.$legendWidth$, !1);
+  $state$jscomp$8$$.$gripRightPos$ = $gripRightPos$jscomp$2$$;
+  return $state$jscomp$8$$;
+}
+function $JSCompiler_StaticMethods_resizeLabels$$($JSCompiler_StaticMethods_resizeLabels$self$$) {
+  $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, $x$jscomp$84$$ => $x$jscomp$84$$.x);
+  const $newResizeWidth$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$ - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$;
+  var $delta$jscomp$1_newLabels$jscomp$1$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$prevWidth$ - $newResizeWidth$$;
+  console.log("delta: ", $delta$jscomp$1_newLabels$jscomp$1$$);
+  $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$prevWidth$ = $newResizeWidth$$;
+  console.log("newResizeWidth: ", $newResizeWidth$$);
+  console.log("this.state.lastResizeWidth: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$);
+  console.log("ratio: ", $newResizeWidth$$ / $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$);
+  console.log("ratioToCompareTo: ", 0.7);
+  const $diff$$ = $JSCompiler_StaticMethods_normalizeValue$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$[1].x - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$mainCanvasWidth$, !1) - $JSCompiler_StaticMethods_normalizeValue$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$[0].x - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minXOrig$, 
+  $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$mainCanvasWidth$, !1);
+  console.log("diff: ", $diff$$);
+  if (150 <= $diff$$ && 0 < $delta$jscomp$1_newLabels$jscomp$1$$) {
+    let $prevX$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$;
+    console.log("this.state.labelX before: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$);
+    const $newLabels$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.reduce(($res$$, $label$jscomp$5$$, $index$jscomp$75_midLabel$$) => {
+      if (0 === $index$jscomp$75_midLabel$$) {
+        return $prevX$$ = $label$jscomp$5$$.x, $res$$;
+      }
+      console.log("prevX: ", $prevX$$);
+      console.log("label.x: ", $label$jscomp$5$$.x);
+      $index$jscomp$75_midLabel$$ = {x:$prevX$$ + ($label$jscomp$5$$.x - $prevX$$) / 2, opacity:1, priority:$JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$};
+      $prevX$$ = $label$jscomp$5$$.x;
+      $binaryInsert$$module$src$utils$$($res$$, $index$jscomp$75_midLabel$$, ($a$jscomp$1$$, $b$jscomp$1$$) => $a$jscomp$1$$.x > $b$jscomp$1$$.x ? 1 : $a$jscomp$1$$.x < $b$jscomp$1$$.x ? -1 : 0);
+      return $res$$;
+    }, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.slice());
+    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$ = $newLabels$$;
+    console.log("this.state.labelsX after: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$);
+    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$ = $newResizeWidth$$;
+    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$++;
+    console.log("this.state.resizeCounter: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$);
+  }
+  70 > $diff$$ && 0 > $delta$jscomp$1_newLabels$jscomp$1$$ && (console.log("priority to remove: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$ - 1), console.log("this.state.labelsX before: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$), $delta$jscomp$1_newLabels$jscomp$1$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.filter($label$jscomp$6$$ => 0 === $label$jscomp$6$$.priority ? !0 : $label$jscomp$6$$.priority !== $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$ - 
+  1), $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$ = $newResizeWidth$$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$--, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$ = $delta$jscomp$1_newLabels$jscomp$1$$, console.log("this.state.labelsX after: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$));
 }
 function $JSCompiler_StaticMethods_animateWindow$$($JSCompiler_StaticMethods_animateWindow$self$$) {
   let $steps$jscomp$1$$ = 0;
@@ -133,77 +171,41 @@ function $JSCompiler_StaticMethods_animateWindow$$($JSCompiler_StaticMethods_ani
   }));
   $JSCompiler_StaticMethods_render$$($JSCompiler_StaticMethods_animateWindow$self$$);
 }
-function $JSCompiler_StaticMethods_findExtremums$$($state$jscomp$6$$) {
-  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$6$$.lines;
-  const $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(($line$$, $index$jscomp$77$$) => $state$jscomp$6$$.enabled[$index$jscomp$77$$]).reduce(($max$$, $line$jscomp$1$$) => Math.max($max$$, Math.max(...$line$jscomp$1$$)), -Infinity);
-  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(($line$jscomp$2$$, $index$jscomp$78$$) => $state$jscomp$6$$.enabled[$index$jscomp$78$$]).reduce(($max$jscomp$1$$, $line$jscomp$3$$) => Math.min($max$jscomp$1$$, Math.min(...$line$jscomp$3$$)), Infinity);
+function $JSCompiler_StaticMethods_findExtremums$$($state$jscomp$4$$) {
+  var $lines$jscomp$1_minY$jscomp$2$$ = $state$jscomp$4$$.lines;
+  const $minX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][0], $maxX$jscomp$1$$ = $lines$jscomp$1_minY$jscomp$2$$[0][$lines$jscomp$1_minY$jscomp$2$$[0].length - 1], $maxY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(($line$$, $index$jscomp$77$$) => $state$jscomp$4$$.enabled[$index$jscomp$77$$]).reduce(($max$$, $line$jscomp$1$$) => Math.max($max$$, Math.max(...$line$jscomp$1$$)), -Infinity);
+  $lines$jscomp$1_minY$jscomp$2$$ = $lines$jscomp$1_minY$jscomp$2$$.slice(1).filter(($line$jscomp$2$$, $index$jscomp$78$$) => $state$jscomp$4$$.enabled[$index$jscomp$78$$]).reduce(($max$jscomp$1$$, $line$jscomp$3$$) => Math.min($max$jscomp$1$$, Math.min(...$line$jscomp$3$$)), Infinity);
   return {$minX$:$minX$jscomp$1$$, $maxX$:$maxX$jscomp$1$$, $maxY$:$maxY$jscomp$2$$, $minY$:$lines$jscomp$1_minY$jscomp$2$$};
 }
-function $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($xs$jscomp$1$$, $minX$jscomp$3_searchEndIndex$jscomp$5$$, $maxX$jscomp$3$$, $extract$$ = $x$jscomp$92$$ => $x$jscomp$92$$) {
-  let $searchStartIndex$jscomp$5$$ = 0;
-  for (var $counter$jscomp$3_counter$jscomp$4$$ = 0; $counter$jscomp$3_counter$jscomp$4$$ < $xs$jscomp$1$$.length; $counter$jscomp$3_counter$jscomp$4$$++) {
-    if ($extract$$($xs$jscomp$1$$[$counter$jscomp$3_counter$jscomp$4$$]) >= $minX$jscomp$3_searchEndIndex$jscomp$5$$ && 0 <= $counter$jscomp$3_counter$jscomp$4$$ - 1) {
-      $searchStartIndex$jscomp$5$$ = $counter$jscomp$3_counter$jscomp$4$$ - 1;
+function $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($xs$jscomp$1$$, $minX$jscomp$3_searchEndIndex$jscomp$2$$, $maxX$jscomp$3$$, $extract$$ = $x$jscomp$86$$ => $x$jscomp$86$$) {
+  let $searchStartIndex$jscomp$2$$ = 0;
+  for (var $counter$jscomp$1_counter$jscomp$2$$ = 0; $counter$jscomp$1_counter$jscomp$2$$ < $xs$jscomp$1$$.length; $counter$jscomp$1_counter$jscomp$2$$++) {
+    if ($extract$$($xs$jscomp$1$$[$counter$jscomp$1_counter$jscomp$2$$]) >= $minX$jscomp$3_searchEndIndex$jscomp$2$$ && 0 <= $counter$jscomp$1_counter$jscomp$2$$ - 1) {
+      $searchStartIndex$jscomp$2$$ = $counter$jscomp$1_counter$jscomp$2$$ - 1;
       break;
     }
   }
-  $minX$jscomp$3_searchEndIndex$jscomp$5$$ = $xs$jscomp$1$$.length - 1;
-  for ($counter$jscomp$3_counter$jscomp$4$$ = $xs$jscomp$1$$.length - 1; 0 <= $counter$jscomp$3_counter$jscomp$4$$; $counter$jscomp$3_counter$jscomp$4$$--) {
-    if ($extract$$($xs$jscomp$1$$[$counter$jscomp$3_counter$jscomp$4$$]) <= $maxX$jscomp$3$$ && $counter$jscomp$3_counter$jscomp$4$$ + 1 < $xs$jscomp$1$$.length) {
-      $minX$jscomp$3_searchEndIndex$jscomp$5$$ = $counter$jscomp$3_counter$jscomp$4$$ + 1;
+  $minX$jscomp$3_searchEndIndex$jscomp$2$$ = $xs$jscomp$1$$.length - 1;
+  for ($counter$jscomp$1_counter$jscomp$2$$ = $xs$jscomp$1$$.length - 1; 0 <= $counter$jscomp$1_counter$jscomp$2$$; $counter$jscomp$1_counter$jscomp$2$$--) {
+    if ($extract$$($xs$jscomp$1$$[$counter$jscomp$1_counter$jscomp$2$$]) <= $maxX$jscomp$3$$ && $counter$jscomp$1_counter$jscomp$2$$ + 1 < $xs$jscomp$1$$.length) {
+      $minX$jscomp$3_searchEndIndex$jscomp$2$$ = $counter$jscomp$1_counter$jscomp$2$$ + 1;
       break;
     }
   }
-  return {$searchStartIndex$:$searchStartIndex$jscomp$5$$, $searchEndIndex$:$minX$jscomp$3_searchEndIndex$jscomp$5$$};
+  return {$searchStartIndex$:$searchStartIndex$jscomp$2$$, $searchEndIndex$:$minX$jscomp$3_searchEndIndex$jscomp$2$$};
 }
 function $JSCompiler_StaticMethods_normalizeValue$$($coordinate_value$jscomp$87$$, $minValue$$, $maxValue$$, $screenMin$$, $screenMax$$, $isY$$) {
   $coordinate_value$jscomp$87$$ = $screenMin$$ + ($coordinate_value$jscomp$87$$ - $minValue$$) / (($maxValue$$ - $minValue$$) / ($screenMax$$ - $screenMin$$));
   return $isY$$ ? $screenMax$$ - $coordinate_value$jscomp$87$$ : $coordinate_value$jscomp$87$$;
 }
-function $JSCompiler_StaticMethods_resizeLabels$$($JSCompiler_StaticMethods_resizeLabels$self$$) {
-  $JSCompiler_StaticMethods_findSearchIndexesInInterval$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, $x$jscomp$90$$ => $x$jscomp$90$$.x);
-  const $newResizeWidth$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$ - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$;
-  var $delta$jscomp$1_newLabels$jscomp$1$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$prevWidth$ - $newResizeWidth$$;
-  console.log("delta: ", $delta$jscomp$1_newLabels$jscomp$1$$);
-  $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$prevWidth$ = $newResizeWidth$$;
-  console.log("newResizeWidth: ", $newResizeWidth$$);
-  console.log("this.state.lastResizeWidth: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$);
-  console.log("ratio: ", $newResizeWidth$$ / $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$);
-  console.log("ratioToCompareTo: ", 0.7);
-  const $diff$$ = $JSCompiler_StaticMethods_normalizeValue$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$[1].x - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minXOrig$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$mainCanvasWidth$, !1) - $JSCompiler_StaticMethods_normalizeValue$$($JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$[0].x - $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minXOrig$, 
-  $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$mainCanvasWidth$, !1);
-  console.log("diff: ", $diff$$);
-  if (150 <= $diff$$ && 0 < $delta$jscomp$1_newLabels$jscomp$1$$) {
-    let $prevX$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$minX$;
-    console.log("this.state.labelX before: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$);
-    const $newLabels$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.reduce(($res$$, $label$jscomp$10$$, $index$jscomp$75_midLabel$$) => {
-      if (0 === $index$jscomp$75_midLabel$$) {
-        return $prevX$$ = $label$jscomp$10$$.x, $res$$;
-      }
-      console.log("prevX: ", $prevX$$);
-      console.log("label.x: ", $label$jscomp$10$$.x);
-      $index$jscomp$75_midLabel$$ = {x:$prevX$$ + ($label$jscomp$10$$.x - $prevX$$) / 2, opacity:1, priority:$JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$};
-      $prevX$$ = $label$jscomp$10$$.x;
-      $binaryInsert$$module$src$utils$$($res$$, $index$jscomp$75_midLabel$$, ($a$jscomp$1$$, $b$jscomp$1$$) => $a$jscomp$1$$.x > $b$jscomp$1$$.x ? 1 : $a$jscomp$1$$.x < $b$jscomp$1$$.x ? -1 : 0);
-      return $res$$;
-    }, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.slice());
-    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$ = $newLabels$$;
-    console.log("this.state.labelsX after: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$);
-    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$ = $newResizeWidth$$;
-    $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$++;
-    console.log("this.state.resizeCounter: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$);
-  }
-  70 > $diff$$ && 0 > $delta$jscomp$1_newLabels$jscomp$1$$ && (console.log("priority to remove: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$ - 1), console.log("this.state.labelsX before: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$), $delta$jscomp$1_newLabels$jscomp$1$$ = $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$.filter($label$jscomp$11$$ => $label$jscomp$11$$.priority !== $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$ - 
-  1), $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$lastResizeWidth$ = $newResizeWidth$$, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$resizeCounter$--, $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$ = $delta$jscomp$1_newLabels$jscomp$1$$, console.log("this.state.labelsX after: ", $JSCompiler_StaticMethods_resizeLabels$self$$.$c$.$labelsX$));
-}
-function $JSCompiler_StaticMethods_normalizeEntry$$($state$jscomp$8$$, $screenMinY$$, $canvasWidth$$, $canvasHeight$$, $useOrig$$) {
-  const $minX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$minXOrig$ : $state$jscomp$8$$.$minX$, $maxX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$maxXOrig$ : $state$jscomp$8$$.$maxX$, $maxY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$maxYOrig$ : $state$jscomp$8$$.$maxY$, $minY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$8$$.$minYOrig$ : $state$jscomp$8$$.$minY$;
-  return $state$jscomp$8$$.lines.map(($line$jscomp$8$$, $index$jscomp$81$$) => 0 === $index$jscomp$81$$ ? $line$jscomp$8$$.map($v$jscomp$4$$ => $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$4$$, $minX$jscomp$4$$, $maxX$jscomp$4$$, 0, $canvasWidth$$, !1)) : $line$jscomp$8$$.map($v$jscomp$5$$ => $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$5$$, $minY$jscomp$4$$, $maxY$jscomp$4$$, $screenMinY$$, $canvasHeight$$, !0)));
+function $JSCompiler_StaticMethods_normalizeEntry$$($state$jscomp$6$$, $screenMinY$$, $canvasWidth$$, $canvasHeight$$, $useOrig$$) {
+  const $minX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$6$$.$minXOrig$ : $state$jscomp$6$$.$minX$, $maxX$jscomp$4$$ = $useOrig$$ ? $state$jscomp$6$$.$maxXOrig$ : $state$jscomp$6$$.$maxX$, $maxY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$6$$.$maxYOrig$ : $state$jscomp$6$$.$maxY$, $minY$jscomp$4$$ = $useOrig$$ ? $state$jscomp$6$$.$minYOrig$ : $state$jscomp$6$$.$minY$;
+  return $state$jscomp$6$$.lines.map(($line$jscomp$8$$, $index$jscomp$81$$) => 0 === $index$jscomp$81$$ ? $line$jscomp$8$$.map($v$jscomp$4$$ => $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$4$$, $minX$jscomp$4$$, $maxX$jscomp$4$$, 0, $canvasWidth$$, !1)) : $line$jscomp$8$$.map($v$jscomp$5$$ => $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$5$$, $minY$jscomp$4$$, $maxY$jscomp$4$$, $screenMinY$$, $canvasHeight$$, !0)));
 }
 function $JSCompiler_StaticMethods_renderLines$$($JSCompiler_StaticMethods_renderLines$self$$, $context$jscomp$1$$, $lines$jscomp$4$$, $lineWidth$$) {
   const $linesNumber$$ = $lines$jscomp$4$$.length;
-  for (let $counter$jscomp$5$$ = 1; $counter$jscomp$5$$ < $linesNumber$$; $counter$jscomp$5$$++) {
-    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$5$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$5$$].forEach(($y$jscomp$68$$, $index$jscomp$82$$) => {
+  for (let $counter$jscomp$3$$ = 1; $counter$jscomp$3$$ < $linesNumber$$; $counter$jscomp$3$$++) {
+    $context$jscomp$1$$.lineWidth = $lineWidth$$, $context$jscomp$1$$.beginPath(), $context$jscomp$1$$.strokeStyle = $serializeColor$$module$src$index$$($JSCompiler_StaticMethods_renderLines$self$$.$c$.$colors$[$counter$jscomp$3$$ - 1]), $lines$jscomp$4$$[$counter$jscomp$3$$].forEach(($y$jscomp$68$$, $index$jscomp$82$$) => {
       $context$jscomp$1$$.lineTo($lines$jscomp$4$$[0][$index$jscomp$82$$], $y$jscomp$68$$);
     }), $context$jscomp$1$$.stroke();
   }
@@ -213,7 +215,7 @@ function $JSCompiler_StaticMethods_renderAxisX$$($JSCompiler_StaticMethods_rende
   $context$jscomp$2$$.textAlign = "left";
   $context$jscomp$2$$.fillStyle = "rgb(147,157,165)";
   $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$labelsX$.forEach($v$jscomp$6$$ => {
-    1 > $v$jscomp$6$$.opacity || $context$jscomp$2$$.fillText(`${(new Date(+$v$jscomp$6$$.x)).toString().slice(4, 10)} - ${$v$jscomp$6$$.priority}`, $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$6$$.x, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$minX$, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$mainCanvasWidth$, !1) - 30, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$mainCanvasHeight$ - 10, 60);
+    1 > $v$jscomp$6$$.opacity || $context$jscomp$2$$.fillText((new Date(+$v$jscomp$6$$.x)).toString().slice(4, 10), $JSCompiler_StaticMethods_normalizeValue$$($v$jscomp$6$$.x, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$minX$, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$maxX$, 0, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$mainCanvasWidth$, !1) - 30, $JSCompiler_StaticMethods_renderAxisX$self$$.$c$.$mainCanvasHeight$ - 10, 60);
   });
 }
 function $JSCompiler_StaticMethods_renderWindow$$($JSCompiler_StaticMethods_renderWindow$self$$) {
@@ -228,9 +230,9 @@ function $JSCompiler_StaticMethods_checkRender$$($JSCompiler_StaticMethods_check
   return [...$JSCompiler_StaticMethods_checkRender$self$$.$j$.values()].some($v$jscomp$7$$ => !!$v$jscomp$7$$.length);
 }
 class $Chart$$module$src$index$$ {
-  constructor($chartNumber_state$jscomp$inline_10$$) {
+  constructor($chartNumber_state$jscomp$inline_24$$) {
     this.$A$ = this.$v$ = this.window = this.$H$ = this.$G$ = this.$u$ = this.$m$ = this.$o$ = this.$s$ = null;
-    this.$h$ = $chartNumber_state$jscomp$inline_10$$;
+    this.$h$ = $chartNumber_state$jscomp$inline_24$$;
     this.$i$ = window.devicePixelRatio || 1;
     this.$K$ = this.$R$.bind(this);
     this.$W$ = this.$V$.bind(this);
@@ -242,19 +244,22 @@ class $Chart$$module$src$index$$ {
     this.$I$ = this.$M$.bind(this);
     this.$L$ = this.$U$.bind(this);
     this.$l$ = null;
-    this.$c$ = {$shouldRender$:!0, $mainCanvasWidth$:0, $mainCanvasHeight$:100, $legendCanvasWidth$:0, $legendCanvasHeight$:100, lines:[], enabled:{}, $minX$:0, $maxX$:0, $minY$:0, $maxY$:0, $minXOrig$:0, $maxXOrig$:0, $minYOrig$:0, $maxYOrig$:0, $gripLeftPos$:0, $gripRightPos$:0, $minXLegend$:0, $maxXLegend$:0, $minYLegend$:0, $maxYLegend$:0, $colors$:[], $initialRender$:!0, $nightMode$:!1, $labelsX$:[], priority:0, $lastResizeWidth$:0, $prevWidth$:0, $resizeCounter$:1};
-    $JSCompiler_StaticMethods_formatDataEntry$$(this.$c$, $data$$module$src$data$$[$chartNumber_state$jscomp$inline_10$$]);
+    var $JSCompiler_inline_result$jscomp$1_now$jscomp$inline_10$$ = new Date;
+    $JSCompiler_inline_result$jscomp$1_now$jscomp$inline_10$$ = 0 === $JSCompiler_inline_result$jscomp$1_now$jscomp$inline_10$$.getHours() || 8 > $JSCompiler_inline_result$jscomp$1_now$jscomp$inline_10$$.getHours();
+    this.$c$ = {$shouldRender$:!0, $mainCanvasWidth$:0, $mainCanvasHeight$:100, $legendCanvasWidth$:0, $legendCanvasHeight$:100, lines:[], enabled:{}, $minX$:0, $maxX$:0, $minY$:0, $maxY$:0, $minXOrig$:0, $maxXOrig$:0, $minYOrig$:0, $maxYOrig$:0, $gripLeftPos$:0, $gripRightPos$:0, $minXLegend$:0, $maxXLegend$:0, $minYLegend$:0, $maxYLegend$:0, $colors$:[], $initialRender$:!0, $nightMode$:$JSCompiler_inline_result$jscomp$1_now$jscomp$inline_10$$, $labelsX$:[], priority:0, $lastResizeWidth$:0, $prevWidth$:0, 
+    $resizeCounter$:1};
+    $JSCompiler_StaticMethods_formatDataEntry$$(this.$c$, $data$$module$src$data$$[$chartNumber_state$jscomp$inline_24$$]);
     {
-      $chartNumber_state$jscomp$inline_10$$ = this.$c$;
-      const {$minX$:$minX$jscomp$inline_11$$, $maxX$:$maxX$jscomp$inline_12$$, $maxY$:$maxY$jscomp$inline_13$$, $minY$:$minY$jscomp$inline_14$$} = $JSCompiler_StaticMethods_findExtremums$$($chartNumber_state$jscomp$inline_10$$);
-      $chartNumber_state$jscomp$inline_10$$.$minX$ = $minX$jscomp$inline_11$$;
-      $chartNumber_state$jscomp$inline_10$$.$maxX$ = $maxX$jscomp$inline_12$$;
-      $chartNumber_state$jscomp$inline_10$$.$minY$ = $minY$jscomp$inline_14$$;
-      $chartNumber_state$jscomp$inline_10$$.$maxY$ = $maxY$jscomp$inline_13$$;
-      $chartNumber_state$jscomp$inline_10$$.$minXOrig$ = $minX$jscomp$inline_11$$;
-      $chartNumber_state$jscomp$inline_10$$.$maxXOrig$ = $maxX$jscomp$inline_12$$;
-      $chartNumber_state$jscomp$inline_10$$.$minYOrig$ = $minY$jscomp$inline_14$$;
-      $chartNumber_state$jscomp$inline_10$$.$maxYOrig$ = $maxY$jscomp$inline_13$$;
+      $chartNumber_state$jscomp$inline_24$$ = this.$c$;
+      const {$minX$:$minX$jscomp$inline_25$$, $maxX$:$maxX$jscomp$inline_26$$, $maxY$:$maxY$jscomp$inline_27$$, $minY$:$minY$jscomp$inline_28$$} = $JSCompiler_StaticMethods_findExtremums$$($chartNumber_state$jscomp$inline_24$$);
+      $chartNumber_state$jscomp$inline_24$$.$minX$ = $minX$jscomp$inline_25$$;
+      $chartNumber_state$jscomp$inline_24$$.$maxX$ = $maxX$jscomp$inline_26$$;
+      $chartNumber_state$jscomp$inline_24$$.$minY$ = $minY$jscomp$inline_28$$;
+      $chartNumber_state$jscomp$inline_24$$.$maxY$ = $maxY$jscomp$inline_27$$;
+      $chartNumber_state$jscomp$inline_24$$.$minXOrig$ = $minX$jscomp$inline_25$$;
+      $chartNumber_state$jscomp$inline_24$$.$maxXOrig$ = $maxX$jscomp$inline_26$$;
+      $chartNumber_state$jscomp$inline_24$$.$minYOrig$ = $minY$jscomp$inline_28$$;
+      $chartNumber_state$jscomp$inline_24$$.$maxYOrig$ = $maxY$jscomp$inline_27$$;
     }
     this.$j$ = new Map;
     this.$C$ = !1;
@@ -289,17 +294,17 @@ class $Chart$$module$src$index$$ {
     this.$F$ = $e$jscomp$12$$.pageX - $windowRect$jscomp$1$$.left;
   }
   $Z$() {
-    this.$c$.$nightMode$ ? (document.documentElement.classList.remove("night"), this.$B$.innerText = "Switch to Night Mode") : (document.documentElement.classList.add("night"), this.$B$.innerText = "Switch to Day Mode");
     this.$c$.$nightMode$ = !this.$c$.$nightMode$;
+    $JSCompiler_StaticMethods_renderNightMode$$(this);
   }
   $R$($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$) {
     if (this.$l$) {
       var {$gripLeftPos$:$gripLeftPos$$, $gripRightPos$:$gripRightPos$$} = $JSCompiler_StaticMethods_calculateGripPos$$(this, this.$c$);
       this.$l$ === this.$m$ ? ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$.pageX - this.$w$, this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ >= $gripRightPos$$ - this.$c$.$gripWidth$ ? $gripRightPos$$ - this.$c$.$gripWidth$ : 0 >= $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ ? 0 : 
-      $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$) / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$l$ === this.$u$ ? ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$.pageX - this.$w$, this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ >= this.$f$ ? this.$f$ : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ <= 
-      $gripLeftPos$$ + 2 * this.$c$.$gripWidth$ ? $gripLeftPos$$ + 2 * this.$c$.$gripWidth$ : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$) / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$l$ === this.window && ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$.pageX - this.$F$ - this.$w$ - this.$c$.$gripWidth$, $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = 
-      $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ >= this.$f$ - this.$D$ - 2 * this.$c$.$gripWidth$ ? this.$f$ - this.$D$ - 2 * this.$c$.$gripWidth$ : 0 >= $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ ? 0 : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$, this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ / this.$f$, this.$c$.$maxX$ = 
-      this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ + this.$D$ + 2 * this.$c$.$gripWidth$) / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this));
+      $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$) / this.$f$, $JSCompiler_StaticMethods_resizeLabels$$(this), $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$l$ === this.$u$ ? ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$.pageX - this.$w$, this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ >= 
+      this.$f$ ? this.$f$ : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ <= $gripLeftPos$$ + 2 * this.$c$.$gripWidth$ ? $gripLeftPos$$ + 2 * this.$c$.$gripWidth$ : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$) / this.$f$, $JSCompiler_StaticMethods_resizeLabels$$(this), $JSCompiler_StaticMethods_animateWindow$$(this)) : this.$l$ === this.window && ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$.pageX - 
+      this.$F$ - this.$w$ - this.$c$.$gripWidth$, $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ = $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ >= this.$f$ - this.$D$ - 2 * this.$c$.$gripWidth$ ? this.$f$ - this.$D$ - 2 * this.$c$.$gripWidth$ : 0 >= $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ ? 0 : $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$, this.$c$.$minX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * 
+      $e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ / this.$f$, this.$c$.$maxX$ = this.$c$.$minXOrig$ + (this.$c$.$maxXOrig$ - this.$c$.$minXOrig$) * ($e$jscomp$14_relX_relX$jscomp$1_relX$jscomp$2_relXBound$jscomp$2$$ + this.$D$ + 2 * this.$c$.$gripWidth$) / this.$f$, $JSCompiler_StaticMethods_animateWindow$$(this));
     }
   }
   $V$($e$jscomp$15$$) {
@@ -310,8 +315,8 @@ class $Chart$$module$src$index$$ {
     this.$l$ = null;
   }
 }
-Array(5).fill(1).forEach(($value$jscomp$89$$, $counter$jscomp$6$$) => {
-  const $chart$$ = new $Chart$$module$src$index$$($counter$jscomp$6$$);
+Array(5).fill(1).forEach(($value$jscomp$89$$, $counter$jscomp$4$$) => {
+  const $chart$$ = new $Chart$$module$src$index$$($counter$jscomp$4$$);
   window.addEventListener("DOMContentLoaded", () => {
     $chart$$.$s$ = document.querySelectorAll(".main-canvas")[$chart$$.$h$];
     $chart$$.$o$ = document.querySelectorAll(".legend-canvas")[$chart$$.$h$];
@@ -321,6 +326,7 @@ Array(5).fill(1).forEach(($value$jscomp$89$$, $counter$jscomp$6$$) => {
     $chart$$.$H$ = document.querySelectorAll(".glass-right")[$chart$$.$h$];
     $chart$$.window = document.querySelectorAll(".window")[$chart$$.$h$];
     $chart$$.$B$ = document.querySelector(".day-night-switch");
+    $chart$$.$c$.$nightMode$ && $JSCompiler_StaticMethods_renderNightMode$$($chart$$);
     $chart$$.$s$.style.height = window.getComputedStyle($chart$$.$s$).width;
     $chart$$.$v$ = $JSCompiler_StaticMethods_setupCanvas$$($chart$$, $chart$$.$s$);
     $chart$$.$A$ = $JSCompiler_StaticMethods_setupCanvas$$($chart$$, $chart$$.$o$);
