@@ -288,7 +288,7 @@ class Chart {
       this.dragTarget = null;
     });
     this.dayNightSwitch.addEventListener('click', e => {
-      document.documentElement.classList.toggle('dayNightSwitch');
+      document.documentElement.classList.toggle('night');
     })
   }
 
