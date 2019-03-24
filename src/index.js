@@ -49,6 +49,7 @@ class Chart {
     this.onMouseMoveBound = this.onMouseMove.bind(this);
     this.onTouchMoveBound = this.onTouchMove.bind(this);
     this.onToggleBound = this.onToggle.bind(this);
+    this.toggleNightModeBound = this.toggleNightMode.bind(this);
 
     /** @type {Element} */
     this.dragTarget = null;
@@ -84,6 +85,7 @@ class Chart {
 
       colors: [],
       initialRender: true,
+      nightMode: false,
     };
     this.formatDataEntry(this.state, data[chartNumber]);
     this.setExtremums(this.state);
@@ -297,9 +299,18 @@ class Chart {
     document.addEventListener('touchend', e => {
       this.dragTarget = null;
     });
-    this.dayNightSwitch.addEventListener('click', e => {
-      document.documentElement.classList.toggle('night');
-    });
+    this.dayNightSwitch.addEventListener('click', this.toggleNightModeBound);
+  }
+
+  toggleNightMode() {
+    if (this.state.nightMode) {
+      document.documentElement.classList.remove('night');
+      this.dayNightSwitch.innerText = 'Switch to Night Mode';
+    } else {
+      document.documentElement.classList.add('night');
+      this.dayNightSwitch.innerText = 'Switch to Day Mode';
+    }
+    this.state.nightMode = !this.state.nightMode;
   }
 
   onMouseMove(e) {
@@ -780,7 +791,8 @@ const serializeColor = ({ r, g, b, a }) => {
       colors: !Array.<string>,
       names: !Array.<string>
 
-      initialRender: true,
+      initialRender: boolean,
+      nightMode: boolean,
 }} */
 const State = {};
 
