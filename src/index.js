@@ -496,7 +496,7 @@ class Chart {
     }
     let searchEndIndex = xs.length - 1;
     for (let counter = xs.length - 1; counter >= 0; counter--) {
-      if (xs[counter] <= maxX && counter + 1 < xs.length - 1) {
+      if (xs[counter] <= maxX && counter + 1 < xs.length) {
         searchEndIndex = counter + 1;
         break;
       }
