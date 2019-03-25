@@ -1,7 +1,7 @@
-Pythagoras tree.
+Telegram chart contest app.
 =============
 
-This is Telegram chart context app.
+This is Telegram chart contest app.
 
 Demo
 -
